@@ -1,0 +1,26 @@
+[
+  {
+    "id": "task1",
+    "title": "Make bed",
+    "user_id": "user1",
+    "xp": 10,
+    "gold": 10,
+    "complete": false
+  },
+  {
+    "id": "task2",
+    "title": "Wash dishes",
+    "user_id": "user2",
+    "xp": 15,
+    "gold": 25,
+    "complete": false
+  },
+  {
+    "id": "task3",
+    "title": "Do laundry",
+    "user_id": "user1",
+    "xp": 50,
+    "gold": 100,
+    "complete": false
+  }
+]

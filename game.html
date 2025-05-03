@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Slayer</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        form { margin-bottom: 20px; }
+        .completed { text-decoration: line-through; }
+    </style>
+</head>
+<body>
+    <h1>Create a New Quest</h1>
+    <form action="/create-quest" method="POST">
+        <label for="title">Quest Title:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="xp">Quest XP:</label><br>
+        <input type="number" id="xp" name="xp" required><br><br>
+
+        <label for="gold">Quest Gold:</label><br>
+        <input type="number" id="gold" name="gold" required><br><br>
+
+        <label for="user_id">Assign to User (ID):</label><br>
+        <select id="user_id" name="user_id" required>
+            {{range .Users}}
+                <option value="{{.ID}}">{{.Name}}</option>
+            {{end}}
+        </select><br><br>
+
+        <input type="submit" value="Create Quest">
+    </form>
+
+    <h2>Existing Quests</h2>
+    <ul>
+        {{range .Quests}}
+            <li class="{{if .Complete}}completed{{end}}">
+                {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .UserID}}
+                <form action="/mark-complete" method="POST" style="display:inline;">
+                    <input type="hidden" name="quest_id" value="{{.ID}}">
+                    {{if .Complete}}
+                        <button type="submit" disabled>Completed</button>
+                    {{else}}
+                        <button type="submit">Mark Complete</button>
+                    {{end}}
+                </form>
+            </li>
+        {{else}}
+            <li>No quests yet.</li>
+        {{end}}
+    </ul>
+</body>
+</html>
