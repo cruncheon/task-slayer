@@ -10,6 +10,7 @@ import (
 	"strconv"
 )
 
+// Define the Player struct for player data
 type Player struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
@@ -17,6 +18,7 @@ type Player struct {
 	Gold int64  `json:"gold"`
 }
 
+// Define the Quest struct for quest data
 type Quest struct {
 	ID       string `json:"id"`
 	Title    string `json:"title"`
@@ -27,7 +29,6 @@ type Quest struct {
 }
 
 var players []Player
-
 var quests []Quest
 
 func main() {
@@ -36,10 +37,10 @@ func main() {
 	loadQuests()
 
 	// HTTP routes
-	http.HandleFunc("/", serveGame)                   // Serve the game page
-	http.HandleFunc("/create-quest", createQuest)     // Handle quest creation
-	http.HandleFunc("/complete-quest", completeQuest) // Handle quest completion
-	http.HandleFunc("/quests", listQuests)            // List quests
+	http.HandleFunc("/", homePage)                    // Handle home page
+	http.HandleFunc("/quests", listQuests)            // Hanlde quest list
+	http.HandleFunc("/quest/create", createQuest)     // Handle quest creation
+	http.HandleFunc("/quest/complete", completeQuest) // Handle quest completion
 
 	// HTTP Server
 	srv := &http.Server{Addr: ":8080"}
@@ -77,13 +78,27 @@ func loadQuests() {
 	}
 }
 
-// Serve the game page
-func serveGame(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("game.html")
+// Serve the index page
+func homePage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("base.html", "index.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	err = tmpl.Execute(w, "base.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func listQuests(w http.ResponseWriter, r *http.Request) {
+	// Parse the template files
+	tmpl, err := template.ParseFiles("base.html", "list_quests.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Define data structure for list of quests
 	data := struct {
 		Players []Player
 		Quests  []Quest
@@ -92,7 +107,8 @@ func serveGame(w http.ResponseWriter, r *http.Request) {
 		Quests:  quests,
 	}
 
-	err = tmpl.Execute(w, data)
+	// Execute the template with the data structure
+	err = tmpl.ExecuteTemplate(w, "base.html", data)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -100,13 +116,36 @@ func serveGame(w http.ResponseWriter, r *http.Request) {
 
 // Create quest
 func createQuest(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	// If Get request, render create quest page
+	if r.Method == http.MethodGet {
+		// Parse the template files
+		tmpl, err := template.ParseFiles("base.html", "create_quest.html")
+		if err != nil {
+		}
+
+		// Define data structure for quest creation form
+		data := struct {
+			Players []Player
+			Quests  []Quest
+		}{
+			Players: players,
+			Quests:  quests,
+		}
+
+		// Execute template and render create quest page
+		err = tmpl.ExecuteTemplate(w, "base.html", data)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// If Post request, create quest and redirect back to list quests page
+	} else if r.Method == http.MethodPost {
 		r.ParseForm()
 
 		title := r.FormValue("title")
 		playerID := r.FormValue("player_id")
 
-		// Convert xp form input from string to in
+		// Convert xp form input from string to int
 		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
 		if err != nil {
 			log.Printf("Failed to parse XP: %v", err)
@@ -142,7 +181,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		saveQuests()
 
 		log.Printf("%v created for %v", newQuest.ID, newQuest.PlayerID)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/quests", http.StatusSeeOther)
 	}
 }
 
@@ -178,7 +217,7 @@ func completeQuest(w http.ResponseWriter, r *http.Request) {
 		savePlayers()
 
 		log.Printf("%s completed %v", player.ID, quest.ID)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/quests", http.StatusSeeOther)
 	}
 }
 
@@ -233,12 +272,5 @@ func savePlayers() {
 	err = encoder.Encode(players)
 	if err != nil {
 		log.Fatal(err)
-	}
-}
-
-// List quests (for testing)
-func listQuests(w http.ResponseWriter, r *http.Request) {
-	for _, quest := range quests {
-		fmt.Fprintf(w, "Quest: %s, Assigned to: %s, Complete: %v\n", quest.Title, quest.PlayerID, quest.Complete)
 	}
 }

@@ -1,0 +1,22 @@
+{{define "content"}}
+<h1>Create a New Quest</h1>
+<form action="/quest/create" method="POST">
+    <label for="title">Quest Title:</label><br>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="xp">Quest XP:</label><br>
+    <input type="number" id="xp" name="xp" required><br><br>
+
+    <label for="gold">Quest Gold:</label><br>
+    <input type="number" id="gold" name="gold" required><br><br>
+
+    <label for="player_id">Assign to Player (ID):</label><br>
+    <select id="player_id" name="player_id" required>
+        {{range .Players}}
+            <option value="{{.ID}}">{{.Name}}</option>
+        {{end}}
+    </select><br><br>
+
+    <input type="submit" value="Create Quest">
+</form>
+{{ end }}

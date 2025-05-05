@@ -1,0 +1,20 @@
+{{define "content"}}
+<h1>Quest List</h2>
+<ul>
+    {{range .Quests}}
+        <li class="{{if .Complete}}completed{{end}}">
+            {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .PlayerID}}
+            <form action="/quest/complete" method="POST" style="display:inline;">
+                <input type="hidden" name="quest_id" value="{{.ID}}">
+                {{if .Complete}}
+                    <button type="submit" disabled>Completed</button>
+                {{else}}
+                    <button type="submit">Mark Complete</button>
+                {{end}}
+            </form>
+        </li>
+    {{else}}
+        <li>No quests yet.</li>
+    {{end}}
+</ul>
+{{end}}
