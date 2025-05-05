@@ -22,9 +22,9 @@
         <label for="gold">Quest Gold:</label><br>
         <input type="number" id="gold" name="gold" required><br><br>
 
-        <label for="user_id">Assign to User (ID):</label><br>
-        <select id="user_id" name="user_id" required>
-            {{range .Users}}
+        <label for="player_id">Assign to Player (ID):</label><br>
+        <select id="player_id" name="player_id" required>
+            {{range .Players}}
                 <option value="{{.ID}}">{{.Name}}</option>
             {{end}}
         </select><br><br>
@@ -36,7 +36,7 @@
     <ul>
         {{range .Quests}}
             <li class="{{if .Complete}}completed{{end}}">
-                {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .UserID}}
+                {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .PlayerID}}
                 <form action="/complete-quest" method="POST" style="display:inline;">
                     <input type="hidden" name="quest_id" value="{{.ID}}">
                     {{if .Complete}}

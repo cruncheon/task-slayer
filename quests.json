@@ -1,24 +1,24 @@
 [
   {
-    "id": "task1",
+    "id": "quest1",
     "title": "Make bed",
-    "user_id": "user1",
+    "player_id": "player1",
     "xp": 10,
     "gold": 10,
     "complete": false
   },
   {
-    "id": "task2",
+    "id": "quest2",
     "title": "Wash dishes",
-    "user_id": "user2",
+    "player_id": "player2",
     "xp": 15,
     "gold": 25,
     "complete": false
   },
   {
-    "id": "task3",
+    "id": "quest3",
     "title": "Do laundry",
-    "user_id": "user1",
+    "player_id": "player1",
     "xp": 50,
     "gold": 100,
     "complete": false

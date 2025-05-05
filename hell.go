@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-type User struct {
+type Player struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 	XP   int64  `json:"xp"`
@@ -20,19 +20,19 @@ type User struct {
 type Quest struct {
 	ID       string `json:"id"`
 	Title    string `json:"title"`
-	UserID   string `json:"user_id"`
+	PlayerID string `json:"player_id"`
 	XP       int64  `json:"xp"`
 	Gold     int64  `json:"gold"`
 	Complete bool   `json:"complete"`
 }
 
-var users []User
+var players []Player
 
 var quests []Quest
 
 func main() {
-	// Load users and quests
-	loadUsers()
+	// Load players and quests
+	loadPlayers()
 	loadQuests()
 
 	// HTTP routes
@@ -49,15 +49,15 @@ func main() {
 	}
 }
 
-// Load users
-func loadUsers() {
-	file, err := os.Open("users.json")
+// Load players
+func loadPlayers() {
+	file, err := os.Open("players.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 
-	err = json.NewDecoder(file).Decode(&users)
+	err = json.NewDecoder(file).Decode(&players)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -85,11 +85,11 @@ func serveGame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
-		Users  []User
-		Quests []Quest
+		Players []Player
+		Quests  []Quest
 	}{
-		Users:  users,
-		Quests: quests,
+		Players: players,
+		Quests:  quests,
 	}
 
 	err = tmpl.Execute(w, data)
@@ -104,7 +104,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		title := r.FormValue("title")
-		userID := r.FormValue("user_id")
+		playerID := r.FormValue("player_id")
 
 		// Convert xp form input from string to in
 		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
@@ -129,7 +129,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		newQuest := Quest{
 			ID:       questID,
 			Title:    title,
-			UserID:   userID,
+			PlayerID: playerID,
 			XP:       xp,
 			Gold:     gold,
 			Complete: false,
@@ -141,6 +141,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		// Save changes to JSON file
 		saveQuests()
 
+		log.Printf("%v created for %v", newQuest.ID, newQuest.PlayerID)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
@@ -158,24 +159,25 @@ func completeQuest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Get user ID
-		user := getUser(quest.UserID)
-		if user == nil {
-			http.Error(w, "User not found", http.StatusNotFound)
+		// Get player ID
+		player := getPlayer(quest.PlayerID)
+		if player == nil {
+			http.Error(w, "Player not found", http.StatusNotFound)
 			return
 		}
 
 		// Mark quest as complete
 		quest.Complete = true
 
-		// Add quest XP and Gold to user's XP and Gold
-		user.XP += quest.XP
-		user.Gold += quest.Gold
+		// Add quest XP and Gold to player's XP and Gold
+		player.XP += quest.XP
+		player.Gold += quest.Gold
 
 		// Save changes
 		saveQuests()
-		saveUsers()
+		savePlayers()
 
+		log.Printf("%s completed %v", player.ID, quest.ID)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
@@ -190,11 +192,11 @@ func getQuest(id string) *Quest {
 	return nil
 }
 
-// Get user details by ID
-func getUser(id string) *User {
-	for i := range users {
-		if users[i].ID == id {
-			return &users[i]
+// Get player details by ID
+func getPlayer(id string) *Player {
+	for i := range players {
+		if players[i].ID == id {
+			return &players[i]
 		}
 	}
 	return nil
@@ -217,18 +219,18 @@ func saveQuests() {
 	}
 }
 
-// Save users
-func saveUsers() {
-	userFile, err := os.Create("users.json")
+// Save players
+func savePlayers() {
+	playerFile, err := os.Create("players.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer userFile.Close()
+	defer playerFile.Close()
 
-	encoder := json.NewEncoder(userFile)
+	encoder := json.NewEncoder(playerFile)
 	encoder.SetIndent("", "  ")
 
-	err = encoder.Encode(users)
+	err = encoder.Encode(players)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -237,6 +239,6 @@ func saveUsers() {
 // List quests (for testing)
 func listQuests(w http.ResponseWriter, r *http.Request) {
 	for _, quest := range quests {
-		fmt.Fprintf(w, "Quest: %s, Assigned to: %s, Complete: %v\n", quest.Title, quest.UserID, quest.Complete)
+		fmt.Fprintf(w, "Quest: %s, Assigned to: %s, Complete: %v\n", quest.Title, quest.PlayerID, quest.Complete)
 	}
 }
