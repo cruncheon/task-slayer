@@ -26,21 +26,31 @@ type Quest struct {
 	Complete bool   `json:"complete"`
 }
 
+type Item struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Price int64  `json:"price"`
+}
+
 var players []Player
 var quests []Quest
+var items []Item
 
 func main() {
 	// Load players and quests
 	loadPlayers()
 	loadQuests()
+	loadItems()
 
 	// HTTP routes
-	http.HandleFunc("/", homePage)                    // Handle home page
-	http.HandleFunc("/quests", listQuests)            // Hanlde quest list
-	http.HandleFunc("/quest/create", createQuest)     // Handle quest creation
-	http.HandleFunc("/quest/complete", completeQuest) // Handle quest completion
-	http.HandleFunc("/players", listPlayers)          // Handle player list
-	http.HandleFunc("/player/create", createPlayer)   // Handle player creation
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/quests", listQuests)
+	http.HandleFunc("/quest/create", createQuest)
+	http.HandleFunc("/quest/complete", completeQuest)
+	http.HandleFunc("/players", listPlayers)
+	http.HandleFunc("/player/create", createPlayer)
+	http.HandleFunc("/items", listItems)
+	http.HandleFunc("/item/create", createItem)
 
 	// HTTP Server
 	srv := &http.Server{Addr: ":8080"}
@@ -135,6 +145,42 @@ func loadQuests() {
 	}
 }
 
+// Load items
+func loadItems() {
+	filePath := "data/items.json"
+
+	// Check if the file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// Create the file if it does not exist
+		file, err := os.Create(filePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+
+		// Initialize an empty slice of items and write to the file
+		var initialItems []Item
+		err = json.NewEncoder(file).Encode(initialItems)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	// Open the file if it exists
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	// Decode JSON from quest file
+	err = json.NewDecoder(file).Decode(&items)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // Save quests
 func saveQuests() {
 	questFile, err := os.Create("data/quests.json")
@@ -169,6 +215,23 @@ func savePlayers() {
 	}
 }
 
+// Save items
+func saveItems() {
+	itemFile, err := os.Create("data/items.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer itemFile.Close()
+
+	encoder := json.NewEncoder(itemFile)
+	encoder.SetIndent("", "  ")
+
+	err = encoder.Encode(items)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // Get quest details by ID
 func getQuest(id string) *Quest {
 	for i := range quests {
@@ -184,6 +247,16 @@ func getPlayer(id string) *Player {
 	for i := range players {
 		if players[i].ID == id {
 			return &players[i]
+		}
+	}
+	return nil
+}
+
+// Get item details by ID
+func getItem(id string) *Item {
+	for i := range items {
+		if items[i].ID == id {
+			return &items[i]
 		}
 	}
 	return nil
