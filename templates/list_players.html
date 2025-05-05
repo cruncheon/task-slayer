@@ -1,0 +1,12 @@
+{{define "content"}}
+<h1>Player List</h2>
+<ul>
+    {{range .Players}}
+        <li>
+            {{ .ID }} - {{ .Name }} - XP: {{ .XP }} - Gold: {{ .Gold }}
+        </li>
+    {{else}}
+        <li>No quests yet.</li>
+    {{end}}
+</ul>
+{{end}}

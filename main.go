@@ -39,6 +39,7 @@ func main() {
 	http.HandleFunc("/quests", listQuests)            // Hanlde quest list
 	http.HandleFunc("/quest/create", createQuest)     // Handle quest creation
 	http.HandleFunc("/quest/complete", completeQuest) // Handle quest completion
+	http.HandleFunc("/players", listPlayers)          // Handle player list
 
 	// HTTP Server
 	srv := &http.Server{Addr: ":8080"}
