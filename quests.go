@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -136,4 +138,67 @@ func completeQuest(w http.ResponseWriter, r *http.Request) {
 		log.Printf("%s completed %v", player.ID, quest.ID)
 		http.Redirect(w, r, "/quests", http.StatusSeeOther)
 	}
+}
+
+// Load quests
+func loadQuests() {
+	filePath := "data/quests.json"
+
+	// Check if the file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// Create the file if it does not exist
+		file, err := os.Create(filePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+
+		// Initialize an empty slice of quests and write to the file
+		var initialQuests []Quest
+		err = json.NewEncoder(file).Encode(initialQuests)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	// Open the file if it exists
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	// Decode JSON from quest file
+	err = json.NewDecoder(file).Decode(&quests)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Save quests
+func saveQuests() {
+	questFile, err := os.Create("data/quests.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer questFile.Close()
+
+	encoder := json.NewEncoder(questFile)
+	encoder.SetIndent("", "  ")
+
+	err = encoder.Encode(quests)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Get quest details by ID
+func getQuest(id string) *Quest {
+	for i := range quests {
+		if quests[i].ID == id {
+			return &quests[i]
+		}
+	}
+	return nil
 }

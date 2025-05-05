@@ -1,11 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 )
 
 // Define the Player struct for player data
@@ -44,11 +42,14 @@ func main() {
 
 	// HTTP routes
 	http.HandleFunc("/", homePage)
+
 	http.HandleFunc("/quests", listQuests)
 	http.HandleFunc("/quest/create", createQuest)
 	http.HandleFunc("/quest/complete", completeQuest)
+
 	http.HandleFunc("/players", listPlayers)
 	http.HandleFunc("/player/create", createPlayer)
+
 	http.HandleFunc("/items", listItems)
 	http.HandleFunc("/item/create", createItem)
 
@@ -71,193 +72,4 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-// Load players
-func loadPlayers() {
-	filePath := "data/players.json"
-
-	// Check if the file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// Create the file if it does not exist
-		file, err := os.Create(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer file.Close()
-
-		// Initialize an empty slice of players and write to the file
-		var initialPlayers []Player
-		err = json.NewEncoder(file).Encode(initialPlayers)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	// Open the file if it exists
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// Decode JSON from player file
-	err = json.NewDecoder(file).Decode(&players)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Load quests
-func loadQuests() {
-	filePath := "data/quests.json"
-
-	// Check if the file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// Create the file if it does not exist
-		file, err := os.Create(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer file.Close()
-
-		// Initialize an empty slice of quests and write to the file
-		var initialQuests []Quest
-		err = json.NewEncoder(file).Encode(initialQuests)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	// Open the file if it exists
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// Decode JSON from quest file
-	err = json.NewDecoder(file).Decode(&quests)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Load items
-func loadItems() {
-	filePath := "data/items.json"
-
-	// Check if the file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// Create the file if it does not exist
-		file, err := os.Create(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer file.Close()
-
-		// Initialize an empty slice of items and write to the file
-		var initialItems []Item
-		err = json.NewEncoder(file).Encode(initialItems)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	// Open the file if it exists
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// Decode JSON from quest file
-	err = json.NewDecoder(file).Decode(&items)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Save quests
-func saveQuests() {
-	questFile, err := os.Create("data/quests.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer questFile.Close()
-
-	encoder := json.NewEncoder(questFile)
-	encoder.SetIndent("", "  ")
-
-	err = encoder.Encode(quests)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Save players
-func savePlayers() {
-	playerFile, err := os.Create("data/players.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer playerFile.Close()
-
-	encoder := json.NewEncoder(playerFile)
-	encoder.SetIndent("", "  ")
-
-	err = encoder.Encode(players)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Save items
-func saveItems() {
-	itemFile, err := os.Create("data/items.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer itemFile.Close()
-
-	encoder := json.NewEncoder(itemFile)
-	encoder.SetIndent("", "  ")
-
-	err = encoder.Encode(items)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Get quest details by ID
-func getQuest(id string) *Quest {
-	for i := range quests {
-		if quests[i].ID == id {
-			return &quests[i]
-		}
-	}
-	return nil
-}
-
-// Get player details by ID
-func getPlayer(id string) *Player {
-	for i := range players {
-		if players[i].ID == id {
-			return &players[i]
-		}
-	}
-	return nil
-}
-
-// Get item details by ID
-func getItem(id string) *Item {
-	for i := range items {
-		if items[i].ID == id {
-			return &items[i]
-		}
-	}
-	return nil
 }

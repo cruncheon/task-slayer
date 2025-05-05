@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 func listPlayers(w http.ResponseWriter, r *http.Request) {
@@ -80,4 +82,67 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 		log.Printf("%v - %v created", newPlayer.ID, newPlayer.Name)
 		http.Redirect(w, r, "/players", http.StatusSeeOther)
 	}
+}
+
+// Load players
+func loadPlayers() {
+	filePath := "data/players.json"
+
+	// Check if the file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// Create the file if it does not exist
+		file, err := os.Create(filePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+
+		// Initialize an empty slice of players and write to the file
+		var initialPlayers []Player
+		err = json.NewEncoder(file).Encode(initialPlayers)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	// Open the file if it exists
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	// Decode JSON from player file
+	err = json.NewDecoder(file).Decode(&players)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Save players
+func savePlayers() {
+	playerFile, err := os.Create("data/players.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer playerFile.Close()
+
+	encoder := json.NewEncoder(playerFile)
+	encoder.SetIndent("", "  ")
+
+	err = encoder.Encode(players)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Get player details by ID
+func getPlayer(id string) *Player {
+	for i := range players {
+		if players[i].ID == id {
+			return &players[i]
+		}
+	}
+	return nil
 }
