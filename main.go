@@ -48,35 +48,7 @@ func main() {
 	}
 }
 
-// Load players
-func loadPlayers() {
-	file, err := os.Open("data/players.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	err = json.NewDecoder(file).Decode(&players)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Load quests
-func loadQuests() {
-	file, err := os.Open("data/quests.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	err = json.NewDecoder(file).Decode(&quests)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Serve the index page
+// Serve the home page
 func homePage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/base.html", "templates/index.html")
 	if err != nil {
@@ -89,24 +61,76 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Get quest details by ID
-func getQuest(id string) *Quest {
-	for i := range quests {
-		if quests[i].ID == id {
-			return &quests[i]
+// Load players
+func loadPlayers() {
+	filePath := "data/players.json"
+
+	// Check if the file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// Create the file if it does not exist
+		file, err := os.Create(filePath)
+		if err != nil {
+			log.Fatal(err)
 		}
+		defer file.Close()
+
+		// Initialize an empty slice of players and write to the file
+		var initialPlayers []Player
+		err = json.NewEncoder(file).Encode(initialPlayers)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
 	}
-	return nil
+
+	// Open the file if it exists
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	// Decode JSON from player file
+	err = json.NewDecoder(file).Decode(&players)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-// Get player details by ID
-func getPlayer(id string) *Player {
-	for i := range players {
-		if players[i].ID == id {
-			return &players[i]
+// Load quests
+func loadQuests() {
+	filePath := "data/quests.json"
+
+	// Check if the file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// Create the file if it does not exist
+		file, err := os.Create(filePath)
+		if err != nil {
+			log.Fatal(err)
 		}
+		defer file.Close()
+
+		// Initialize an empty slice of quests and write to the file
+		var initialQuests []Quest
+		err = json.NewEncoder(file).Encode(initialQuests)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
 	}
-	return nil
+
+	// Open the file if it exists
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	// Decode JSON from quest file
+	err = json.NewDecoder(file).Decode(&quests)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // Save quests
@@ -141,4 +165,24 @@ func savePlayers() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// Get quest details by ID
+func getQuest(id string) *Quest {
+	for i := range quests {
+		if quests[i].ID == id {
+			return &quests[i]
+		}
+	}
+	return nil
+}
+
+// Get player details by ID
+func getPlayer(id string) *Player {
+	for i := range players {
+		if players[i].ID == id {
+			return &players[i]
+		}
+	}
+	return nil
 }
