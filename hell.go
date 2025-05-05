@@ -36,10 +36,10 @@ func main() {
 	loadQuests()
 
 	// HTTP routes
-	http.HandleFunc("/", serveGame)                 // Serve the game page
-	http.HandleFunc("/create-quest", createQuest)   // Handle quest creation
-	http.HandleFunc("/mark-complete", markComplete) // Handle quest completion
-	http.HandleFunc("/quests", listQuests)          // List quests
+	http.HandleFunc("/", serveGame)                   // Serve the game page
+	http.HandleFunc("/create-quest", createQuest)     // Handle quest creation
+	http.HandleFunc("/complete-quest", completeQuest) // Handle quest completion
+	http.HandleFunc("/quests", listQuests)            // List quests
 
 	// HTTP Server
 	srv := &http.Server{Addr: ":8080"}
@@ -106,6 +106,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("title")
 		userID := r.FormValue("user_id")
 
+		// Convert xp form input from string to in
 		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
 		if err != nil {
 			log.Printf("Failed to parse XP: %v", err)
@@ -113,6 +114,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Convert gold form input from string to int
 		gold, err := strconv.ParseInt(r.FormValue("gold"), 10, 64)
 		if err != nil {
 			log.Printf("Failed to parse Gold: %v", err)
@@ -120,7 +122,10 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Set quest ID by getting current amount of quests and adding +1
 		questID := fmt.Sprintf("quest%d", len(quests)+1)
+
+		// Structure new quest details
 		newQuest := Quest{
 			ID:       questID,
 			Title:    title,
@@ -130,8 +135,10 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 			Complete: false,
 		}
 
+		// Add new quest to quests slice
 		quests = append(quests, newQuest)
 
+		// Save changes to JSON file
 		saveQuests()
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -139,18 +146,20 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 }
 
 // Complete quest
-func markComplete(w http.ResponseWriter, r *http.Request) {
+func completeQuest(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		r.ParseForm()
 
+		// Get quest ID
 		questID := r.FormValue("quest_id")
-		quest := findQuestByID(questID)
+		quest := getQuest(questID)
 		if quest == nil {
 			http.Error(w, "Quest not found", http.StatusNotFound)
 			return
 		}
 
-		user := findUserByID(quest.UserID)
+		// Get user ID
+		user := getUser(quest.UserID)
 		if user == nil {
 			http.Error(w, "User not found", http.StatusNotFound)
 			return
@@ -171,7 +180,8 @@ func markComplete(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func findQuestByID(id string) *Quest {
+// Get quest details by ID
+func getQuest(id string) *Quest {
 	for i := range quests {
 		if quests[i].ID == id {
 			return &quests[i]
@@ -180,7 +190,8 @@ func findQuestByID(id string) *Quest {
 	return nil
 }
 
-func findUserByID(id string) *User {
+// Get user details by ID
+func getUser(id string) *User {
 	for i := range users {
 		if users[i].ID == id {
 			return &users[i]
@@ -206,6 +217,7 @@ func saveQuests() {
 	}
 }
 
+// Save users
 func saveUsers() {
 	userFile, err := os.Create("users.json")
 	if err != nil {

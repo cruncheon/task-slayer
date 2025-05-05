@@ -37,7 +37,7 @@
         {{range .Quests}}
             <li class="{{if .Complete}}completed{{end}}">
                 {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .UserID}}
-                <form action="/mark-complete" method="POST" style="display:inline;">
+                <form action="/complete-quest" method="POST" style="display:inline;">
                     <input type="hidden" name="quest_id" value="{{.ID}}">
                     {{if .Complete}}
                         <button type="submit" disabled>Completed</button>
