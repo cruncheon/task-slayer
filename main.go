@@ -45,6 +45,7 @@ func main() {
 
 	http.HandleFunc("/quests", listQuests)
 	http.HandleFunc("/quest/create", createQuest)
+	http.HandleFunc("/quest/edit/", editQuest)
 	http.HandleFunc("/quest/complete", completeQuest)
 
 	http.HandleFunc("/players", listPlayers)

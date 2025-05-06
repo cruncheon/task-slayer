@@ -104,6 +104,70 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Edit quest
+func editQuest(w http.ResponseWriter, r *http.Request) {
+	// Extract quest ID from URL path
+	id := r.URL.Path[len("/quest/edit/"):]
+
+	// Get the quest by ID
+	quest := getQuest(id)
+	if quest == nil {
+		http.Error(w, "Quest not found", http.StatusNotFound)
+		return
+	}
+
+	if r.Method == http.MethodGet {
+		// Render edit quest page
+		tmpl, err := template.ParseFiles("templates/base.html", "templates/edit_quest.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		data := struct {
+			Quest *Quest
+		}{
+			Quest: quest,
+		}
+
+		err = tmpl.ExecuteTemplate(w, "base.html", data)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if r.Method == http.MethodPost {
+		// Update the quest details
+		r.ParseForm()
+
+		title := r.FormValue("title")
+
+		// Convert XP form input from string to int
+		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
+		if err != nil {
+			log.Printf("Failed to parse XP: %v", err)
+			http.Error(w, "Invalid XP value", http.StatusBadRequest)
+			return
+		}
+
+		// Convert gold form input from string to int
+		gold, err := strconv.ParseInt(r.FormValue("gold"), 10, 64)
+		if err != nil {
+			log.Printf("Failed to parse Gold: %v", err)
+			http.Error(w, "Invalid Gold value", http.StatusBadRequest)
+			return
+		}
+
+		// Update quest details
+		quest.Title = title
+		quest.XP = xp
+		quest.Gold = gold
+
+		// Save changes to JSON file
+		saveQuests()
+
+		log.Printf("%v - %v updated", quest.ID, quest.Title)
+		http.Redirect(w, r, "/quests", http.StatusSeeOther)
+	}
+}
+
 // Complete quest
 func completeQuest(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {

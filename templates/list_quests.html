@@ -3,7 +3,8 @@
 <ul>
     {{range .Quests}}
         <li class="{{if .Complete}}completed{{end}}">
-            {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .PlayerID}}
+            {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .PlayerID}} - 
+            <a href="/quest/edit/{{ .ID }}">Edit</a> - 
             <form action="/quest/complete" method="POST" style="display:inline;">
                 <input type="hidden" name="quest_id" value="{{.ID}}">
                 {{if .Complete}}
