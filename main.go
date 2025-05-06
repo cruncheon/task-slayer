@@ -52,6 +52,7 @@ func main() {
 
 	http.HandleFunc("/items", listItems)
 	http.HandleFunc("/item/create", createItem)
+	http.HandleFunc("/item/edit/", editItem)
 
 	// HTTP Server
 	srv := &http.Server{Addr: ":8080"}

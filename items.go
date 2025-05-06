@@ -53,7 +53,7 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		// If Post request, create player and redirect back to list players page
+		// If Post request, create item and redirect back to list items page
 	} else if r.Method == http.MethodPost {
 		r.ParseForm()
 
@@ -67,23 +67,77 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Set player ID by getting current amount of quests and adding +1
+		// Set item ID by getting current amount of items and adding +1
 		itemID := fmt.Sprintf("item%d", len(items)+1)
 
-		// Structure new player details
+		// Structure new item details
 		newItem := Item{
 			ID:    itemID,
 			Name:  name,
 			Price: price,
 		}
 
-		// Add new player to players slice
+		// Add new item to items slice
 		items = append(items, newItem)
 
 		// Save changes to JSON file
 		saveItems()
 
 		log.Printf("%v - %v created", newItem.ID, newItem.Name)
+		http.Redirect(w, r, "/items", http.StatusSeeOther)
+	}
+}
+
+func editItem(w http.ResponseWriter, r *http.Request) {
+	// Extract item ID from URL path
+	id := r.URL.Path[len("/item/edit/"):]
+
+	// Get the item by ID
+	item := getItem(id)
+	if item == nil {
+		http.Error(w, "Item not found", http.StatusNotFound)
+		return
+	}
+
+	if r.Method == http.MethodGet {
+		// Render edit item page
+		tmpl, err := template.ParseFiles("templates/base.html", "templates/edit_item.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		data := struct {
+			Item *Item
+		}{
+			Item: item,
+		}
+
+		err = tmpl.ExecuteTemplate(w, "base.html", data)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if r.Method == http.MethodPost {
+		// Update the item details
+		r.ParseForm()
+
+		name := r.FormValue("name")
+
+		// Convert price form input from string to int
+		price, err := strconv.ParseInt(r.FormValue("price"), 10, 64)
+		if err != nil {
+			log.Printf("Failed to parse Price: %v", err)
+			http.Error(w, "Invalid Price value", http.StatusBadRequest)
+			return
+		}
+
+		// Update item details
+		item.Name = name
+		item.Price = price
+
+		// Save changes to JSON file
+		saveItems()
+
+		log.Printf("%v - %v updated", item.ID, item.Name)
 		http.Redirect(w, r, "/items", http.StatusSeeOther)
 	}
 }
