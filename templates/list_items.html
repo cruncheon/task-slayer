@@ -3,7 +3,8 @@
 <ul>
     {{range .Items}}
         <li>
-            {{ .ID }} - {{ .Name }} - Price: {{ .Price }}
+            {{ .ID }} - {{ .Name }} - Price: {{ .Price }} - 
+            <a href="/item/edit/{{ .ID }}">Edit</a>
         </li>
     {{else}}
         <li>No items yet.</li>
