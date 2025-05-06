@@ -136,7 +136,7 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Update item details
+		// Update player details
 		player.Name = name
 		player.XP = xp
 		player.Gold = gold
