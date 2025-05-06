@@ -62,7 +62,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 		xp := int64(0)
 		gold := int64(0)
 
-		// Set player ID by getting current amount of quests and adding +1
+		// Set player ID by getting current amount of players and adding +1
 		playerID := fmt.Sprintf("player%d", len(players)+1)
 
 		// Structure new player details
