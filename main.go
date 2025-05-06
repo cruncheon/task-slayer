@@ -49,6 +49,7 @@ func main() {
 
 	http.HandleFunc("/players", listPlayers)
 	http.HandleFunc("/player/create", createPlayer)
+	http.HandleFunc("/player/edit/", editPlayer)
 
 	http.HandleFunc("/items", listItems)
 	http.HandleFunc("/item/create", createItem)

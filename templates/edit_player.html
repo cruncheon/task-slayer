@@ -1,0 +1,15 @@
+{{define "content"}}
+<h1>Edit Player - {{ .Player.Name }} </h1>
+<form action="/player/edit/{{ .Player.ID }}" method="POST">
+    <label for="name">Player Name:</label><br>
+    <input type="text" id="name" name="name" value="{{ .Player.Name }}" required><br><br>
+
+    <label for="xp">XP:</label><br>
+    <input type="number" id="xp" name="xp" value="{{ .Player.XP }}" required><br><br>
+
+    <label for="gold">Gold:</label><br>
+    <input type="number" id="gold" name="gold" value="{{ .Player.Gold }}" required><br><br>
+
+    <input type="submit" value="Update Player">
+</form>
+{{ end }}

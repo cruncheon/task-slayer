@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func listPlayers(w http.ResponseWriter, r *http.Request) {
@@ -80,6 +81,70 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 		savePlayers()
 
 		log.Printf("%v - %v created", newPlayer.ID, newPlayer.Name)
+		http.Redirect(w, r, "/players", http.StatusSeeOther)
+	}
+}
+
+// Edit player
+func editPlayer(w http.ResponseWriter, r *http.Request) {
+	// Extract player ID from URL path
+	id := r.URL.Path[len("/player/edit/"):]
+
+	// Get the player by ID
+	player := getPlayer(id)
+	if player == nil {
+		http.Error(w, "Player not found", http.StatusNotFound)
+		return
+	}
+
+	if r.Method == http.MethodGet {
+		// Render edit player page
+		tmpl, err := template.ParseFiles("templates/base.html", "templates/edit_player.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		data := struct {
+			Player *Player
+		}{
+			Player: player,
+		}
+
+		err = tmpl.ExecuteTemplate(w, "base.html", data)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if r.Method == http.MethodPost {
+		// Update the player details
+		r.ParseForm()
+
+		name := r.FormValue("name")
+
+		// Convert XP form input from string to int
+		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
+		if err != nil {
+			log.Printf("Failed to parse XP: %v", err)
+			http.Error(w, "Invalid XP value", http.StatusBadRequest)
+			return
+		}
+
+		// Convert gold form input from string to int
+		gold, err := strconv.ParseInt(r.FormValue("gold"), 10, 64)
+		if err != nil {
+			log.Printf("Failed to parse Gold: %v", err)
+			http.Error(w, "Invalid Gold value", http.StatusBadRequest)
+			return
+		}
+
+		// Update item details
+		player.Name = name
+		player.XP = xp
+		player.Gold = gold
+
+		// Save changes to JSON file
+		savePlayers()
+
+		log.Printf("%v - %v updated", player.ID, player.Name)
 		http.Redirect(w, r, "/players", http.StatusSeeOther)
 	}
 }
