@@ -8,11 +8,13 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/cruncheon/task-slayer/templates"
 )
 
 func listPlayers(w http.ResponseWriter, r *http.Request) {
 	// Parse the template files
-	tmpl, err := template.ParseFiles(baseTmpl, "templates/players/list_players.html")
+	tmpl, err := template.ParseFiles(templates.Base, templates.ListPlayers)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +40,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create player page
 	if r.Method == http.MethodGet {
 		// Parse the template files
-		tmpl, err := template.ParseFiles(baseTmpl, "templates/players/create_player.html")
+		tmpl, err := template.ParseFiles(templates.Base, templates.CreatePlayer)
 		if err != nil {
 		}
 
@@ -99,7 +101,7 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		// Render edit player page
-		tmpl, err := template.ParseFiles(baseTmpl, "templates/players/edit_player.html")
+		tmpl, err := template.ParseFiles(templates.Base, templates.EditPlayer)
 		if err != nil {
 			log.Fatal(err)
 		}

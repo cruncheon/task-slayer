@@ -4,6 +4,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
+	"github.com/cruncheon/task-slayer/templates"
+)
+
+var (
+	itemsFile   string = "data/items.json"
+	playersFile string = "data/players.json"
+	questsFile  string = "data/quests.json"
 )
 
 // Define the Player struct for player data
@@ -34,12 +42,6 @@ var (
 	players []Player
 	quests  []Quest
 	items   []Item
-
-	itemsFile   string = "data/items.json"
-	playersFile string = "data/players.json"
-	questsFile  string = "data/quests.json"
-
-	baseTmpl string = "templates/base.html"
 )
 
 func main() {
@@ -74,7 +76,7 @@ func main() {
 
 // Serve the home page
 func homePage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles(baseTmpl, "templates/index.html")
+	tmpl, err := template.ParseFiles(templates.Base, "templates/index.html")
 	if err != nil {
 		log.Fatal(err)
 	}

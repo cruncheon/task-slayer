@@ -8,11 +8,13 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/cruncheon/task-slayer/templates"
 )
 
 func listQuests(w http.ResponseWriter, r *http.Request) {
 	// Parse the template files
-	tmpl, err := template.ParseFiles(baseTmpl, "templates/quests/list_quests.html")
+	tmpl, err := template.ParseFiles(templates.Base, templates.ListQuests)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +40,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create quest page
 	if r.Method == http.MethodGet {
 		// Parse the template files
-		tmpl, err := template.ParseFiles(baseTmpl, "templates/quests/create_quest.html")
+		tmpl, err := template.ParseFiles(templates.Base, templates.CreateQuest)
 		if err != nil {
 		}
 
@@ -118,7 +120,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		// Render edit quest page
-		tmpl, err := template.ParseFiles(baseTmpl, "templates/quests/edit_quest.html")
+		tmpl, err := template.ParseFiles(templates.Base, templates.EditQuest)
 		if err != nil {
 			log.Fatal(err)
 		}
