@@ -12,7 +12,7 @@ import (
 
 func listPlayers(w http.ResponseWriter, r *http.Request) {
 	// Parse the template files
-	tmpl, err := template.ParseFiles("templates/base.html", "templates/list_players.html")
+	tmpl, err := template.ParseFiles("templates/base.html", "templates/players/list_players.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create player page
 	if r.Method == http.MethodGet {
 		// Parse the template files
-		tmpl, err := template.ParseFiles("templates/base.html", "templates/create_player.html")
+		tmpl, err := template.ParseFiles("templates/base.html", "templates/players/create_player.html")
 		if err != nil {
 		}
 
@@ -99,7 +99,7 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		// Render edit player page
-		tmpl, err := template.ParseFiles("templates/base.html", "templates/edit_player.html")
+		tmpl, err := template.ParseFiles("templates/base.html", "templates/players/edit_player.html")
 		if err != nil {
 			log.Fatal(err)
 		}
