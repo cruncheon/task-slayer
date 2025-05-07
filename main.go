@@ -38,6 +38,8 @@ var (
 	itemsFile   string = "data/items.json"
 	playersFile string = "data/players.json"
 	questsFile  string = "data/quests.json"
+
+	baseTmpl string = "templates/base.html"
 )
 
 func main() {
@@ -72,7 +74,7 @@ func main() {
 
 // Serve the home page
 func homePage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("templates/base.html", "templates/index.html")
+	tmpl, err := template.ParseFiles(baseTmpl, "templates/index.html")
 	if err != nil {
 		log.Fatal(err)
 	}

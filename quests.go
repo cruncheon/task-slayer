@@ -12,7 +12,7 @@ import (
 
 func listQuests(w http.ResponseWriter, r *http.Request) {
 	// Parse the template files
-	tmpl, err := template.ParseFiles("templates/base.html", "templates/quests/list_quests.html")
+	tmpl, err := template.ParseFiles(baseTmpl, "templates/quests/list_quests.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create quest page
 	if r.Method == http.MethodGet {
 		// Parse the template files
-		tmpl, err := template.ParseFiles("templates/base.html", "templates/quests/create_quest.html")
+		tmpl, err := template.ParseFiles(baseTmpl, "templates/quests/create_quest.html")
 		if err != nil {
 		}
 
@@ -118,7 +118,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		// Render edit quest page
-		tmpl, err := template.ParseFiles("templates/base.html", "templates/quests/edit_quest.html")
+		tmpl, err := template.ParseFiles(baseTmpl, "templates/quests/edit_quest.html")
 		if err != nil {
 			log.Fatal(err)
 		}

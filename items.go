@@ -12,7 +12,7 @@ import (
 
 func listItems(w http.ResponseWriter, r *http.Request) {
 	// Parse the template files
-	tmpl, err := template.ParseFiles("templates/base.html", "templates/items/list_items.html")
+	tmpl, err := template.ParseFiles(baseTmpl, "templates/items/list_items.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +36,7 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create item page
 	if r.Method == http.MethodGet {
 		// Parse the template files
-		tmpl, err := template.ParseFiles("templates/base.html", "templates/items/create_item.html")
+		tmpl, err := template.ParseFiles(baseTmpl, "templates/items/create_item.html")
 		if err != nil {
 		}
 
@@ -101,7 +101,7 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		// Render edit item page
-		tmpl, err := template.ParseFiles("templates/base.html", "templates/items/edit_item.html")
+		tmpl, err := template.ParseFiles(baseTmpl, "templates/items/edit_item.html")
 		if err != nil {
 			log.Fatal(err)
 		}
