@@ -30,9 +30,15 @@ type Item struct {
 	Price int64  `json:"price"`
 }
 
-var players []Player
-var quests []Quest
-var items []Item
+var (
+	players []Player
+	quests  []Quest
+	items   []Item
+
+	itemsFile   string = "data/items.json"
+	playersFile string = "data/players.json"
+	questsFile  string = "data/quests.json"
+)
 
 func main() {
 	// Load players and quests

@@ -206,7 +206,7 @@ func completeQuest(w http.ResponseWriter, r *http.Request) {
 
 // Load quests
 func loadQuests() {
-	filePath := "data/quests.json"
+	filePath := questsFile
 
 	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -242,13 +242,13 @@ func loadQuests() {
 
 // Save quests
 func saveQuests() {
-	questFile, err := os.Create("data/quests.json")
+	file, err := os.Create(questsFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer questFile.Close()
+	defer file.Close()
 
-	encoder := json.NewEncoder(questFile)
+	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 
 	err = encoder.Encode(quests)

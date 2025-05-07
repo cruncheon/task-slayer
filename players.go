@@ -151,7 +151,7 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 
 // Load players
 func loadPlayers() {
-	filePath := "data/players.json"
+	filePath := playersFile
 
 	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -187,13 +187,13 @@ func loadPlayers() {
 
 // Save players
 func savePlayers() {
-	playerFile, err := os.Create("data/players.json")
+	file, err := os.Create(playersFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer playerFile.Close()
+	defer file.Close()
 
-	encoder := json.NewEncoder(playerFile)
+	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 
 	err = encoder.Encode(players)

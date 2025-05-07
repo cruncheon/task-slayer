@@ -144,7 +144,7 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 
 // Load items
 func loadItems() {
-	filePath := "data/items.json"
+	filePath := itemsFile
 
 	// Check if the file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -180,13 +180,13 @@ func loadItems() {
 
 // Save items
 func saveItems() {
-	itemFile, err := os.Create("data/items.json")
+	file, err := os.Create(itemsFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer itemFile.Close()
+	defer file.Close()
 
-	encoder := json.NewEncoder(itemFile)
+	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 
 	err = encoder.Encode(items)
