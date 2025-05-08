@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/cruncheon/task-slayer/templates"
 )
@@ -44,4 +46,15 @@ func renderTemplate(w http.ResponseWriter, tmplPath string, data interface{}) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		log.Println("Error executing template:", err)
 	}
+}
+
+// Parse form integers helper
+func parseFormInt(r *http.Request, key string) (int64, error) {
+	value := r.FormValue(key)
+	intValue, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		log.Printf("Failed to parse %s: %v", key, err)
+		return 0, fmt.Errorf("invalid %s value: %w", key, err)
+	}
+	return intValue, nil
 }

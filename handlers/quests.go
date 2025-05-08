@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/cruncheon/task-slayer/data"
 	"github.com/cruncheon/task-slayer/templates"
@@ -16,8 +15,8 @@ func listQuests(w http.ResponseWriter, r *http.Request) {
 		Players []data.Player
 		Quests  []data.Quest
 	}{
-		Players: data.Players,
-		Quests:  data.Quests,
+		data.Players,
+		data.Quests,
 	}
 
 	// Render list quests page
@@ -33,8 +32,8 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 			Players []data.Player
 			Quests  []data.Quest
 		}{
-			Players: data.Players,
-			Quests:  data.Quests,
+			data.Players,
+			data.Quests,
 		}
 
 		// Render create quest page
@@ -48,18 +47,16 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		playerID := r.FormValue("player_id")
 
 		// Convert xp form input from string to int
-		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
+		xp, err := parseFormInt(r, "xp")
 		if err != nil {
-			log.Printf("Failed to parse XP: %v", err)
-			http.Error(w, "Invalid XP value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		// Convert gold form input from string to int
-		gold, err := strconv.ParseInt(r.FormValue("gold"), 10, 64)
+		gold, err := parseFormInt(r, "gold")
 		if err != nil {
-			log.Printf("Failed to parse Gold: %v", err)
-			http.Error(w, "Invalid Gold value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -102,7 +99,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 		data := struct {
 			Quest *data.Quest
 		}{
-			Quest: quest,
+			quest,
 		}
 
 		// Render edit quest page
@@ -116,18 +113,16 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("title")
 
 		// Convert XP form input from string to int
-		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
+		xp, err := parseFormInt(r, "xp")
 		if err != nil {
-			log.Printf("Failed to parse XP: %v", err)
-			http.Error(w, "Invalid XP value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		// Convert gold form input from string to int
-		gold, err := strconv.ParseInt(r.FormValue("gold"), 10, 64)
+		gold, err := parseFormInt(r, "gold")
 		if err != nil {
-			log.Printf("Failed to parse Gold: %v", err)
-			http.Error(w, "Invalid Gold value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/cruncheon/task-slayer/data"
 	"github.com/cruncheon/task-slayer/templates"
@@ -16,8 +15,8 @@ func listPlayers(w http.ResponseWriter, r *http.Request) {
 		Players []data.Player
 		Quests  []data.Quest
 	}{
-		Players: data.Players,
-		Quests:  data.Quests,
+		data.Players,
+		data.Quests,
 	}
 
 	// Render list players page
@@ -32,7 +31,7 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 		pageData := struct {
 			Players []data.Player
 		}{
-			Players: data.Players,
+			data.Players,
 		}
 
 		// Render create player page
@@ -85,7 +84,7 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 		pageData := struct {
 			Player *data.Player
 		}{
-			Player: player,
+			player,
 		}
 
 		// Render edit player page
@@ -99,18 +98,16 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 
 		// Convert XP form input from string to int
-		xp, err := strconv.ParseInt(r.FormValue("xp"), 10, 64)
+		xp, err := parseFormInt(r, "xp")
 		if err != nil {
-			log.Printf("Failed to parse XP: %v", err)
-			http.Error(w, "Invalid XP value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		// Convert gold form input from string to int
-		gold, err := strconv.ParseInt(r.FormValue("gold"), 10, 64)
+		gold, err := parseFormInt(r, "gold")
 		if err != nil {
-			log.Printf("Failed to parse Gold: %v", err)
-			http.Error(w, "Invalid Gold value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 

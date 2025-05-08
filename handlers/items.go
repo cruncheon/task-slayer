@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/cruncheon/task-slayer/data"
 	"github.com/cruncheon/task-slayer/templates"
@@ -14,7 +13,7 @@ func listItems(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Items []data.Item
 	}{
-		Items: data.Items,
+		data.Items,
 	}
 
 	renderTemplate(w, templates.ListItems, data)
@@ -27,7 +26,7 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 		pageData := struct {
 			Items []data.Item
 		}{
-			Items: data.Items,
+			data.Items,
 		}
 
 		renderTemplate(w, templates.CreateItem, pageData)
@@ -39,10 +38,9 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 
 		// Convert price form input from string to int
-		price, err := strconv.ParseInt(r.FormValue("price"), 10, 64)
+		price, err := parseFormInt(r, "price")
 		if err != nil {
-			log.Printf("Failed to parse Price: %v", err)
-			http.Error(w, "Invalid Price value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -82,7 +80,7 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 		pageData := struct {
 			Item *data.Item
 		}{
-			Item: item,
+			item,
 		}
 
 		renderTemplate(w, templates.EditItem, pageData)
@@ -94,10 +92,9 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 
 		// Convert price form input from string to int
-		price, err := strconv.ParseInt(r.FormValue("price"), 10, 64)
+		price, err := parseFormInt(r, "price")
 		if err != nil {
-			log.Printf("Failed to parse Price: %v", err)
-			http.Error(w, "Invalid Price value", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
