@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,14 +11,8 @@ import (
 )
 
 func listPlayers(w http.ResponseWriter, r *http.Request) {
-	// Parse the template files
-	tmpl, err := template.ParseFiles(templates.Base, templates.ListPlayers)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Define data structure for list of players
-	data := struct {
+	pageData := struct {
 		Players []data.Player
 		Quests  []data.Quest
 	}{
@@ -27,34 +20,23 @@ func listPlayers(w http.ResponseWriter, r *http.Request) {
 		Quests:  data.Quests,
 	}
 
-	// Execute the template with the data structure
-	err = tmpl.ExecuteTemplate(w, "base.html", data)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Render list players page
+	renderTemplate(w, templates.ListPlayers, pageData)
 }
 
 // Create player
 func createPlayer(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create player page
 	if r.Method == http.MethodGet {
-		// Parse the template files
-		tmpl, err := template.ParseFiles(templates.Base, templates.CreatePlayer)
-		if err != nil {
-		}
-
 		// Define data structure for player creation form
-		data := struct {
+		pageData := struct {
 			Players []data.Player
 		}{
 			Players: data.Players,
 		}
 
-		// Execute template and render create player page
-		err = tmpl.ExecuteTemplate(w, "base.html", data)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// Render create player page
+		renderTemplate(w, templates.CreatePlayer, pageData)
 
 		// If Post request, create player and redirect back to list players page
 	} else if r.Method == http.MethodPost {
@@ -98,23 +80,18 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Handle get requests
 	if r.Method == http.MethodGet {
-		// Render edit player page
-		tmpl, err := template.ParseFiles(templates.Base, templates.EditPlayer)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		data := struct {
+		pageData := struct {
 			Player *data.Player
 		}{
 			Player: player,
 		}
 
-		err = tmpl.ExecuteTemplate(w, "base.html", data)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// Render edit player page
+		renderTemplate(w, templates.EditPlayer, pageData)
+
+		// Handle post requests
 	} else if r.Method == http.MethodPost {
 		// Update the player details
 		r.ParseForm()

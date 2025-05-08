@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,14 +11,8 @@ import (
 )
 
 func listQuests(w http.ResponseWriter, r *http.Request) {
-	// Parse the template files
-	tmpl, err := template.ParseFiles(templates.Base, templates.ListQuests)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Define data structure for list of quests
-	data := struct {
+	pageData := struct {
 		Players []data.Player
 		Quests  []data.Quest
 	}{
@@ -27,24 +20,16 @@ func listQuests(w http.ResponseWriter, r *http.Request) {
 		Quests:  data.Quests,
 	}
 
-	// Execute the template with the data structure
-	err = tmpl.ExecuteTemplate(w, "base.html", data)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Render list quests page
+	renderTemplate(w, templates.ListQuests, pageData)
 }
 
 // Create quest
 func createQuest(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create quest page
 	if r.Method == http.MethodGet {
-		// Parse the template files
-		tmpl, err := template.ParseFiles(templates.Base, templates.CreateQuest)
-		if err != nil {
-		}
-
 		// Define data structure for quest creation form
-		data := struct {
+		pageData := struct {
 			Players []data.Player
 			Quests  []data.Quest
 		}{
@@ -52,11 +37,8 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 			Quests:  data.Quests,
 		}
 
-		// Execute template and render create quest page
-		err = tmpl.ExecuteTemplate(w, "base.html", data)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// Render create quest page
+		renderTemplate(w, templates.CreateQuest, pageData)
 
 		// If Post request, create quest and redirect back to list quests page
 	} else if r.Method == http.MethodPost {
@@ -94,10 +76,8 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 			Complete: false,
 		}
 
-		// Add new quest to quests slice
+		// Add new quest to quests slice and save
 		data.Quests = append(data.Quests, newQuest)
-
-		// Save changes to JSON file
 		data.SaveQuests()
 
 		log.Printf("%v created for %v", newQuest.ID, newQuest.PlayerID)
@@ -117,23 +97,18 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Handle get requests
 	if r.Method == http.MethodGet {
-		// Render edit quest page
-		tmpl, err := template.ParseFiles(templates.Base, templates.EditQuest)
-		if err != nil {
-			log.Fatal(err)
-		}
-
 		data := struct {
 			Quest *data.Quest
 		}{
 			Quest: quest,
 		}
 
-		err = tmpl.ExecuteTemplate(w, "base.html", data)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// Render edit quest page
+		renderTemplate(w, templates.EditQuest, data)
+
+		// Handle post requests
 	} else if r.Method == http.MethodPost {
 		// Update the quest details
 		r.ParseForm()

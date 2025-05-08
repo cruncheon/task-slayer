@@ -9,7 +9,7 @@ import (
 )
 
 func LoadRoutes() {
-	http.HandleFunc("/", homePage)
+	http.HandleFunc("/", indexPage)
 
 	http.HandleFunc("/quests", listQuests)
 	http.HandleFunc("/quest/create", createQuest)
@@ -25,15 +25,23 @@ func LoadRoutes() {
 	http.HandleFunc("/item/edit/", editItem)
 }
 
-// Home page
-func homePage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles(templates.Base, "templates/index.html")
+// Index page
+func indexPage(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, templates.Index, nil)
+}
+
+// Render template helper
+func renderTemplate(w http.ResponseWriter, tmplPath string, data interface{}) {
+	tmpl, err := template.ParseFiles(templates.Base, tmplPath)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		log.Println("Error parsing templates:", err)
+		return
 	}
 
-	err = tmpl.Execute(w, "base.html")
+	err = tmpl.ExecuteTemplate(w, "base.html", data)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		log.Println("Error executing template:", err)
 	}
 }

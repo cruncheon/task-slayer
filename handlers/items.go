@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,47 +11,26 @@ import (
 )
 
 func listItems(w http.ResponseWriter, r *http.Request) {
-	// Parse the template files
-	tmpl, err := template.ParseFiles(templates.Base, templates.ListItems)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Define data structure for list of items
 	data := struct {
 		Items []data.Item
 	}{
 		Items: data.Items,
 	}
 
-	// Execute the template with the data structure
-	err = tmpl.ExecuteTemplate(w, "base.html", data)
-	if err != nil {
-		log.Fatal(err)
-	}
+	renderTemplate(w, templates.ListItems, data)
 }
 
 // Create Item
 func createItem(w http.ResponseWriter, r *http.Request) {
 	// If Get request, render create item page
 	if r.Method == http.MethodGet {
-		// Parse the template files
-		tmpl, err := template.ParseFiles(templates.Base, templates.CreateItem)
-		if err != nil {
-		}
-
-		// Define data structure for item creation form
-		data := struct {
+		pageData := struct {
 			Items []data.Item
 		}{
 			Items: data.Items,
 		}
 
-		// Execute template and render create item page
-		err = tmpl.ExecuteTemplate(w, "base.html", data)
-		if err != nil {
-			log.Fatal(err)
-		}
+		renderTemplate(w, templates.CreateItem, pageData)
 
 		// If Post request, create item and redirect back to list items page
 	} else if r.Method == http.MethodPost {
@@ -101,22 +79,14 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodGet {
-		// Render edit item page
-		tmpl, err := template.ParseFiles(templates.Base, templates.EditItem)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		data := struct {
+		pageData := struct {
 			Item *data.Item
 		}{
 			Item: item,
 		}
 
-		err = tmpl.ExecuteTemplate(w, "base.html", data)
-		if err != nil {
-			log.Fatal(err)
-		}
+		renderTemplate(w, templates.EditItem, pageData)
+
 	} else if r.Method == http.MethodPost {
 		// Update the item details
 		r.ParseForm()

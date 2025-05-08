@@ -3,6 +3,8 @@ package templates
 var (
 	Base string = "templates/base.html"
 
+	Index string = "templates/index.html"
+
 	ListItems  string = "templates/items/list_items.html"
 	CreateItem string = "templates/items/create_item.html"
 	EditItem   string = "templates/items/edit_item.html"
