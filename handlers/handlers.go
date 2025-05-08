@@ -8,48 +8,6 @@ import (
 	"github.com/cruncheon/task-slayer/templates"
 )
 
-var (
-	itemsFile   string = "data/items.json"
-	playersFile string = "data/players.json"
-	questsFile  string = "data/quests.json"
-)
-
-// Define the Player struct for player data
-type Player struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	XP   int64  `json:"xp"`
-	Gold int64  `json:"gold"`
-}
-
-// Define the Quest struct for quest data
-type Quest struct {
-	ID       string `json:"id"`
-	Title    string `json:"title"`
-	PlayerID string `json:"player_id"`
-	XP       int64  `json:"xp"`
-	Gold     int64  `json:"gold"`
-	Complete bool   `json:"complete"`
-}
-
-type Item struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Price int64  `json:"price"`
-}
-
-var (
-	players []Player
-	quests  []Quest
-	items   []Item
-)
-
-func LoadData() {
-	loadPlayers()
-	loadQuests()
-	loadItems()
-}
-
 func LoadRoutes() {
 	http.HandleFunc("/", homePage)
 

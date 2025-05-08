@@ -1,14 +1,13 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
+	"github.com/cruncheon/task-slayer/data"
 	"github.com/cruncheon/task-slayer/templates"
 )
 
@@ -21,9 +20,9 @@ func listItems(w http.ResponseWriter, r *http.Request) {
 
 	// Define data structure for list of items
 	data := struct {
-		Items []Item
+		Items []data.Item
 	}{
-		Items: items,
+		Items: data.Items,
 	}
 
 	// Execute the template with the data structure
@@ -44,9 +43,9 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 
 		// Define data structure for item creation form
 		data := struct {
-			Items []Item
+			Items []data.Item
 		}{
-			Items: items,
+			Items: data.Items,
 		}
 
 		// Execute template and render create item page
@@ -70,20 +69,20 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Set item ID by getting current amount of items and adding +1
-		itemID := fmt.Sprintf("item%d", len(items)+1)
+		itemID := fmt.Sprintf("item%d", len(data.Items)+1)
 
 		// Structure new item details
-		newItem := Item{
+		newItem := data.Item{
 			ID:    itemID,
 			Name:  name,
 			Price: price,
 		}
 
 		// Add new item to items slice
-		items = append(items, newItem)
+		data.Items = append(data.Items, newItem)
 
 		// Save changes to JSON file
-		saveItems()
+		data.SaveItems()
 
 		log.Printf("%v - %v created", newItem.ID, newItem.Name)
 		http.Redirect(w, r, "/items", http.StatusSeeOther)
@@ -95,7 +94,7 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/item/edit/"):]
 
 	// Get the item by ID
-	item := getItem(id)
+	item := data.GetItem(id)
 	if item == nil {
 		http.Error(w, "Item not found", http.StatusNotFound)
 		return
@@ -109,7 +108,7 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data := struct {
-			Item *Item
+			Item *data.Item
 		}{
 			Item: item,
 		}
@@ -137,72 +136,9 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 		item.Price = price
 
 		// Save changes to JSON file
-		saveItems()
+		data.SaveItems()
 
 		log.Printf("%v - %v updated", item.ID, item.Name)
 		http.Redirect(w, r, "/items", http.StatusSeeOther)
 	}
-}
-
-// Load items
-func loadItems() {
-	filePath := itemsFile
-
-	// Check if the file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// Create the file if it does not exist
-		file, err := os.Create(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer file.Close()
-
-		// Initialize an empty slice of items and write to the file
-		var initialItems []Item
-		err = json.NewEncoder(file).Encode(initialItems)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	// Open the file if it exists
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// Decode JSON from quest file
-	err = json.NewDecoder(file).Decode(&items)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Save items
-func saveItems() {
-	file, err := os.Create(itemsFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ")
-
-	err = encoder.Encode(items)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Get item details by ID
-func getItem(id string) *Item {
-	for i := range items {
-		if items[i].ID == id {
-			return &items[i]
-		}
-	}
-	return nil
 }

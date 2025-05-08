@@ -4,12 +4,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/cruncheon/task-slayer/data"
 	"github.com/cruncheon/task-slayer/handlers"
 )
 
 func main() {
-	// Load players and quests
-	handlers.LoadData()
+	// JSON data files
+	data.LoadData()
 
 	// HTTP routes
 	handlers.LoadRoutes()

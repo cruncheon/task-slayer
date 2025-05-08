@@ -1,14 +1,13 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
+	"github.com/cruncheon/task-slayer/data"
 	"github.com/cruncheon/task-slayer/templates"
 )
 
@@ -21,11 +20,11 @@ func listQuests(w http.ResponseWriter, r *http.Request) {
 
 	// Define data structure for list of quests
 	data := struct {
-		Players []Player
-		Quests  []Quest
+		Players []data.Player
+		Quests  []data.Quest
 	}{
-		Players: players,
-		Quests:  quests,
+		Players: data.Players,
+		Quests:  data.Quests,
 	}
 
 	// Execute the template with the data structure
@@ -46,11 +45,11 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 
 		// Define data structure for quest creation form
 		data := struct {
-			Players []Player
-			Quests  []Quest
+			Players []data.Player
+			Quests  []data.Quest
 		}{
-			Players: players,
-			Quests:  quests,
+			Players: data.Players,
+			Quests:  data.Quests,
 		}
 
 		// Execute template and render create quest page
@@ -83,10 +82,10 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Set quest ID by getting current amount of quests and adding +1
-		questID := fmt.Sprintf("quest%d", len(quests)+1)
+		questID := fmt.Sprintf("quest%d", len(data.Quests)+1)
 
 		// Structure new quest details
-		newQuest := Quest{
+		newQuest := data.Quest{
 			ID:       questID,
 			Title:    title,
 			PlayerID: playerID,
@@ -96,10 +95,10 @@ func createQuest(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Add new quest to quests slice
-		quests = append(quests, newQuest)
+		data.Quests = append(data.Quests, newQuest)
 
 		// Save changes to JSON file
-		saveQuests()
+		data.SaveQuests()
 
 		log.Printf("%v created for %v", newQuest.ID, newQuest.PlayerID)
 		http.Redirect(w, r, "/quests", http.StatusSeeOther)
@@ -112,7 +111,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/quest/edit/"):]
 
 	// Get the quest by ID
-	quest := getQuest(id)
+	quest := data.GetQuest(id)
 	if quest == nil {
 		http.Error(w, "Quest not found", http.StatusNotFound)
 		return
@@ -126,7 +125,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data := struct {
-			Quest *Quest
+			Quest *data.Quest
 		}{
 			Quest: quest,
 		}
@@ -163,7 +162,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 		quest.Gold = gold
 
 		// Save changes to JSON file
-		saveQuests()
+		data.SaveQuests()
 
 		log.Printf("%v - %v updated", quest.ID, quest.Title)
 		http.Redirect(w, r, "/quests", http.StatusSeeOther)
@@ -177,14 +176,14 @@ func completeQuest(w http.ResponseWriter, r *http.Request) {
 
 		// Get quest ID
 		questID := r.FormValue("quest_id")
-		quest := getQuest(questID)
+		quest := data.GetQuest(questID)
 		if quest == nil {
 			http.Error(w, "Quest not found", http.StatusNotFound)
 			return
 		}
 
 		// Get player ID
-		player := getPlayer(quest.PlayerID)
+		player := data.GetPlayer(quest.PlayerID)
 		if player == nil {
 			http.Error(w, "Player not found", http.StatusNotFound)
 			return
@@ -198,73 +197,10 @@ func completeQuest(w http.ResponseWriter, r *http.Request) {
 		player.Gold += quest.Gold
 
 		// Save changes
-		saveQuests()
-		savePlayers()
+		data.SaveQuests()
+		data.SavePlayers()
 
 		log.Printf("%s completed %v", player.ID, quest.ID)
 		http.Redirect(w, r, "/quests", http.StatusSeeOther)
 	}
-}
-
-// Load quests
-func loadQuests() {
-	filePath := questsFile
-
-	// Check if the file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// Create the file if it does not exist
-		file, err := os.Create(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer file.Close()
-
-		// Initialize an empty slice of quests and write to the file
-		var initialQuests []Quest
-		err = json.NewEncoder(file).Encode(initialQuests)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	// Open the file if it exists
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// Decode JSON from quest file
-	err = json.NewDecoder(file).Decode(&quests)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Save quests
-func saveQuests() {
-	file, err := os.Create(questsFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ")
-
-	err = encoder.Encode(quests)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Get quest details by ID
-func getQuest(id string) *Quest {
-	for i := range quests {
-		if quests[i].ID == id {
-			return &quests[i]
-		}
-	}
-	return nil
 }

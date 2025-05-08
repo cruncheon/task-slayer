@@ -1,14 +1,13 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
+	"github.com/cruncheon/task-slayer/data"
 	"github.com/cruncheon/task-slayer/templates"
 )
 
@@ -21,11 +20,11 @@ func listPlayers(w http.ResponseWriter, r *http.Request) {
 
 	// Define data structure for list of players
 	data := struct {
-		Players []Player
-		Quests  []Quest
+		Players []data.Player
+		Quests  []data.Quest
 	}{
-		Players: players,
-		Quests:  quests,
+		Players: data.Players,
+		Quests:  data.Quests,
 	}
 
 	// Execute the template with the data structure
@@ -46,9 +45,9 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 
 		// Define data structure for player creation form
 		data := struct {
-			Players []Player
+			Players []data.Player
 		}{
-			Players: players,
+			Players: data.Players,
 		}
 
 		// Execute template and render create player page
@@ -66,10 +65,10 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 		gold := int64(0)
 
 		// Set player ID by getting current amount of players and adding +1
-		playerID := fmt.Sprintf("player%d", len(players)+1)
+		playerID := fmt.Sprintf("player%d", len(data.Players)+1)
 
 		// Structure new player details
-		newPlayer := Player{
+		newPlayer := data.Player{
 			ID:   playerID,
 			Name: name,
 			XP:   xp,
@@ -77,10 +76,10 @@ func createPlayer(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Add new player to players slice
-		players = append(players, newPlayer)
+		data.Players = append(data.Players, newPlayer)
 
 		// Save changes to JSON file
-		savePlayers()
+		data.SavePlayers()
 
 		log.Printf("%v - %v created", newPlayer.ID, newPlayer.Name)
 		http.Redirect(w, r, "/players", http.StatusSeeOther)
@@ -93,7 +92,7 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/player/edit/"):]
 
 	// Get the player by ID
-	player := getPlayer(id)
+	player := data.GetPlayer(id)
 	if player == nil {
 		http.Error(w, "Player not found", http.StatusNotFound)
 		return
@@ -107,7 +106,7 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data := struct {
-			Player *Player
+			Player *data.Player
 		}{
 			Player: player,
 		}
@@ -144,72 +143,9 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 		player.Gold = gold
 
 		// Save changes to JSON file
-		savePlayers()
+		data.SavePlayers()
 
 		log.Printf("%v - %v updated", player.ID, player.Name)
 		http.Redirect(w, r, "/players", http.StatusSeeOther)
 	}
-}
-
-// Load players
-func loadPlayers() {
-	filePath := playersFile
-
-	// Check if the file exists
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// Create the file if it does not exist
-		file, err := os.Create(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer file.Close()
-
-		// Initialize an empty slice of players and write to the file
-		var initialPlayers []Player
-		err = json.NewEncoder(file).Encode(initialPlayers)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	// Open the file if it exists
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// Decode JSON from player file
-	err = json.NewDecoder(file).Decode(&players)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Save players
-func savePlayers() {
-	file, err := os.Create(playersFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ")
-
-	err = encoder.Encode(players)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// Get player details by ID
-func getPlayer(id string) *Player {
-	for i := range players {
-		if players[i].ID == id {
-			return &players[i]
-		}
-	}
-	return nil
 }
