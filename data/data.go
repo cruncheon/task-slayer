@@ -2,9 +2,9 @@ package data
 
 // Variables for data file paths
 var (
-	itemsFile   string = "data/items.json"
-	playersFile string = "data/players.json"
-	questsFile  string = "data/quests.json"
+	itemsFile   string = "data/json/items.json"
+	playersFile string = "data/json/players.json"
+	questsFile  string = "data/json/quests.json"
 )
 
 // Varialbes for data slices
