@@ -109,3 +109,14 @@ func editItem(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/items", http.StatusSeeOther)
 	}
 }
+
+func deleteItem(w http.ResponseWriter, r *http.Request) {
+	// Extract item ID from URL path
+	id := r.URL.Path[len("/item/delete/"):]
+	if err := data.DeleteItem(id); err != nil {
+		http.Error(w, fmt.Sprintf("Failed to delete item: %v", err), http.StatusInternalServerError)
+		return
+	}
+	log.Printf("%v deleted", id)
+	http.Redirect(w, r, "/items", http.StatusSeeOther)
+}

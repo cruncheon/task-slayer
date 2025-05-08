@@ -174,3 +174,14 @@ func completeQuest(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/quests", http.StatusSeeOther)
 	}
 }
+
+func deleteQuest(w http.ResponseWriter, r *http.Request) {
+	// Extract quest ID from URL path
+	id := r.URL.Path[len("/quest/delete/"):]
+	if err := data.DeleteQuest(id); err != nil {
+		http.Error(w, fmt.Sprintf("Failed to delete quest: %v", err), http.StatusInternalServerError)
+		return
+	}
+	log.Printf("%v deleted", id)
+	http.Redirect(w, r, "/quests", http.StatusSeeOther)
+}

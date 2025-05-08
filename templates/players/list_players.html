@@ -3,8 +3,12 @@
 <ul>
     {{range .Players}}
         <li>
-            {{ .ID }} - {{ .Name }} - XP: {{ .XP }} - Gold: {{ .Gold }} - 
-            <a href="/player/edit/{{ .ID }}">Edit</a>
+            {{ .ID }} - 
+            {{ .Name }} - 
+            XP: {{ .XP }} - 
+            Gold: {{ .Gold }} - 
+            <a href="/player/edit/{{ .ID }}">Edit</a> - 
+            <a href="/player/delete/{{ .ID }}">Delete</a>
         </li>
     {{else}}
         <li>No players yet.</li>

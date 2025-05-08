@@ -123,3 +123,14 @@ func editPlayer(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/players", http.StatusSeeOther)
 	}
 }
+
+func deletePlayer(w http.ResponseWriter, r *http.Request) {
+	// Extract player ID from URL path
+	id := r.URL.Path[len("/player/delete/"):]
+	if err := data.DeletePlayer(id); err != nil {
+		http.Error(w, fmt.Sprintf("Failed to delete player: %v", err), http.StatusInternalServerError)
+		return
+	}
+	log.Printf("%v deleted", id)
+	http.Redirect(w, r, "/players", http.StatusSeeOther)
+}

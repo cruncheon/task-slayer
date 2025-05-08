@@ -5,6 +5,7 @@
         <li class="{{if .Complete}}completed{{end}}">
             {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .PlayerID}} - 
             <a href="/quest/edit/{{ .ID }}">Edit</a> - 
+            <a href="/quest/delete/{{ .ID }}">Delete</a> -
             <form action="/quest/complete" method="POST" style="display:inline;">
                 <input type="hidden" name="quest_id" value="{{.ID}}">
                 {{if .Complete}}
