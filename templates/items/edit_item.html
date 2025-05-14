@@ -1,12 +1,12 @@
 {{define "content"}}
-<h1>Edit Item - {{ .Item.Name }} </h1>
+<h1 class="mb-4 text-3xl font-bold">Edit Item - {{ .Item.Name }} </h1>
 <form action="/item/edit/{{ .Item.ID }}" method="POST">
     <label for="name">Item Name:</label><br>
-    <input type="text" id="name" name="name" value="{{ .Item.Name }}" required><br><br>
+    <input class="px-2 border-1 rounded-md" type="text" id="name" name="name" value="{{ .Item.Name }}" required><br><br>
 
     <label for="price">Item Price:</label><br>
-    <input type="number" id="price" name="price" value="{{ .Item.Price }}" required><br><br>
+    <input class="px-2 border-1 rounded-md" type="number" id="price" name="price" value="{{ .Item.Price }}" required><br><br>
 
-    <input type="submit" value="Update Item">
+    <input class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" type="submit" value="Update Item">
 </form>
 {{ end }}

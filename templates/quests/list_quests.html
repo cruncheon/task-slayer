@@ -1,12 +1,19 @@
 {{define "content"}}
-<h1>Quest List</h2>
-<ul>
+<h1 class="mb-4 text-3xl font-bold">Quest List</h1>
+<div class="mx-auto flex gap-x-6">
     {{range .Quests}}
-        <li class="{{if .Complete}}completed{{end}}">
-            {{.Title}} - XP: {{ .XP }} - Gold: {{ .Gold }} Assigned to {{ .PlayerID}} - 
-            <a href="/quest/edit/{{ .ID }}">Edit</a> - 
-            <a href="/quest/delete/{{ .ID }}">Delete</a> -
-            <form action="/quest/complete" method="POST" style="display:inline;">
+        <div class="p-2 {{if .Complete}}bg-gray-400{{else}}bg-gray-200{{end}} border-1 mb-4 rounded-lg shadow-md">
+            <p class="text-lg font-semibold">{{.Title}}</p>
+            <p>XP: {{ .XP }}</p>
+            <p>Gold: {{ .Gold }}</p>
+            <p class="mb-4 italic">Assigned to {{ .PlayerID}} </p>
+            {{if .Complete}}
+                
+            {{else}}
+                <a class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" href="/quest/edit/{{ .ID }}">Edit</a>
+                <a class="px-2 py-1 bg-red-200 rounded-md shadow-sm" href="/quest/delete/{{ .ID }}">Delete</a>
+            {{end}}
+            <form class="px-2 py-1 bg-green-200 rounded-md shadow-sm" action="/quest/complete" method="POST" style="display:inline;">
                 <input type="hidden" name="quest_id" value="{{.ID}}">
                 {{if .Complete}}
                     <button type="submit" disabled>Completed</button>
@@ -14,9 +21,9 @@
                     <button type="submit">Mark Complete</button>
                 {{end}}
             </form>
-        </li>
+        </div>
     {{else}}
-        <li>No quests yet.</li>
+        <p>No quests yet.</p>
     {{end}}
-</ul>
+</div>
 {{end}}

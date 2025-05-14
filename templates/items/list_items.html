@@ -1,16 +1,15 @@
 {{define "content"}}
-<h1>Item List</h2>
-<ul>
+<h1 class="mb-4 text-3xl font-bold">Item List</h2>
+<div class="mx-auto flex gap-x-6">
     {{range .Items}}
-        <li>
-            {{ .ID }} - 
-            {{ .Name }} - 
-            Price: {{ .Price }} - 
-            <a href="/item/edit/{{ .ID }}">Edit</a> - 
-            <a href="/item/delete/{{ .ID }}">Delete</a>
-        </li>
+        <div class="p-2 bg-gray-100 border-1 mb-4 rounded-lg shadow-md">
+            <p class="text-lg font-semibold">{{ .Name }}</p>
+            <p class="mb-4">Price: {{ .Price }}</p>
+            <a class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" href="/item/edit/{{ .ID }}">Edit</a> 
+            <a class="px-2 py-1 bg-red-200 rounded-md shadow-sm" href="/item/delete/{{ .ID }}">Delete</a>
+        </div>
     {{else}}
-        <li>No items yet.</li>
+        <p>No items yet.</p>
     {{end}}
-</ul>
+</div>
 {{end}}
