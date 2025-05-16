@@ -11,9 +11,11 @@ import (
 
 func listItems(w http.ResponseWriter, r *http.Request) {
 	data := struct {
-		Items []data.Item
+		Items   []data.Item
+		Players []data.Player
 	}{
 		data.Items,
+		data.Players,
 	}
 
 	renderTemplate(w, templates.ListItems, data)
@@ -118,5 +120,43 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Printf("%v deleted", id)
+	http.Redirect(w, r, "/items", http.StatusSeeOther)
+}
+
+func buyItem(w http.ResponseWriter, r *http.Request) {
+	// Extract item ID an player ID
+	id := r.URL.Path[len("/item/buy/"):]
+	pid := r.FormValue("player_id")
+
+	// Get the item by ID
+	item := data.GetItem(id)
+	if item == nil {
+		http.Error(w, "Item not found", http.StatusNotFound)
+		return
+	}
+
+	// Get the player by ID
+	player := data.GetPlayer(pid)
+	if player == nil {
+		http.Error(w, "Player not found", http.StatusNotFound)
+		return
+	}
+
+	// Check if player has enough gold to buy item
+	if player.Gold < item.Price {
+		http.Error(w, "Not enough gold", http.StatusBadRequest)
+		return
+	}
+
+	// Deduct gold from player
+	player.Gold -= item.Price
+
+	// Add item to player's inventory
+	player.Items = append(player.Items, item.Name)
+
+	// Save changes
+	data.SavePlayers()
+
+	log.Printf("%v bought %v", player.Name, item.Name)
 	http.Redirect(w, r, "/items", http.StatusSeeOther)
 }

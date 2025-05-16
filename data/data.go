@@ -16,10 +16,11 @@ var (
 
 // Player data struct
 type Player struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	XP   int64  `json:"xp"`
-	Gold int64  `json:"gold"`
+	ID    string   `json:"id"`
+	Name  string   `json:"name"`
+	XP    int64    `json:"xp"`
+	Gold  int64    `json:"gold"`
+	Items []string `json:"items"`
 }
 
 // Quest data struct

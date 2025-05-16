@@ -3,10 +3,19 @@
 <div class="mx-auto flex gap-x-6">
     {{range .Items}}
         <div class="p-2 bg-gray-100 border-1 mb-4 rounded-lg shadow-md">
-            <p class="text-lg font-semibold">{{ .Name }}</p>
-            <p class="mb-4">Price: {{ .Price }}</p>
-            <a class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" href="/item/edit/{{ .ID }}">Edit</a> 
-            <a class="px-2 py-1 bg-red-200 rounded-md shadow-sm" href="/item/delete/{{ .ID }}">Delete</a>
+            <form action="/item/buy/{{ .ID }}" method="post">
+                <!-- Item Details -->
+                <p class="text-lg font-semibold">{{ .Name }}</p>
+                <p class="mb-4">Price: {{ .Price }}</p>
+                <!-- Player Dropdown -->
+                <select name="player_id" class="px-2 py-1 bg-gray-200 rounded-md shadow-sm mr-2">
+                    {{range $index, $player := $.Players}}
+                        <option value="{{ $player.ID }}">{{ $player.Name }}</option>
+                    {{end}}
+                </select>
+                <!-- Buy Button -->
+                <button type="submit" class="px-2 py-1 bg-blue-200 rounded-md shadow-sm">Buy</button>
+            </form>
         </div>
     {{else}}
         <p>No items yet.</p>

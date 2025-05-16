@@ -28,6 +28,7 @@ func LoadRoutes() {
 	http.HandleFunc("/item/create", createItem)
 	http.HandleFunc("/item/edit/", editItem)
 	http.HandleFunc("/item/delete/", deleteItem)
+	http.HandleFunc("/item/buy/", buyItem)
 }
 
 // Index page
