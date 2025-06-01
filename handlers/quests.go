@@ -25,61 +25,65 @@ func listQuests(w http.ResponseWriter, r *http.Request) {
 
 // Create quest
 func createQuest(w http.ResponseWriter, r *http.Request) {
-	// If Get request, render create quest page
-	if r.Method == http.MethodGet {
-		// Define data structure for quest creation form
-		pageData := struct {
-			Players []data.Player
-			Quests  []data.Quest
-		}{
-			data.Players,
-			data.Quests,
-		}
+	switch r.Method {
+		// If Get request, render create quest page
+		case "GET":
+			// Define data structure for quest creation form
+			pageData := struct {
+				Players []data.Player
+				Quests  []data.Quest
+			}{
+				data.Players,
+				data.Quests,
+			}
 
-		// Render create quest page
-		renderTemplate(w, templates.CreateQuest, pageData)
+			// Render create quest page
+			renderTemplate(w, templates.CreateQuest, pageData)
 
 		// If Post request, create quest and redirect back to list quests page
-	} else if r.Method == http.MethodPost {
-		r.ParseForm()
+		case "POST":
+			r.ParseForm()
 
-		title := r.FormValue("title")
-		playerID := r.FormValue("player_id")
+			title := r.FormValue("title")
+			playerID := r.FormValue("player_id")
 
-		// Convert xp form input from string to int
-		xp, err := parseFormInt(r, "xp")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+			// Convert xp form input from string to int
+			xp, err := parseFormInt(r, "xp")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			// Convert gold form input from string to int
+			gold, err := parseFormInt(r, "gold")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			// Set quest ID by getting current amount of quests and adding +1
+			questID := fmt.Sprintf("quest%d", len(data.Quests)+1)
+
+			// Structure new quest details
+			newQuest := data.Quest{
+				ID:       questID,
+				Title:    title,
+				PlayerID: playerID,
+				XP:       xp,
+				Gold:     gold,
+				Complete: false,
+			}
+
+			// Add new quest to quests slice and save
+			data.Quests = append(data.Quests, newQuest)
+			data.SaveQuests()
+
+			log.Printf("%v created for %v", newQuest.ID, newQuest.PlayerID)
+			http.Redirect(w, r, "/quests", http.StatusSeeOther)
+
+		default:
+			http.Error(w, "Method Not Allowed", http.StatusBadRequest)
 		}
-
-		// Convert gold form input from string to int
-		gold, err := parseFormInt(r, "gold")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		// Set quest ID by getting current amount of quests and adding +1
-		questID := fmt.Sprintf("quest%d", len(data.Quests)+1)
-
-		// Structure new quest details
-		newQuest := data.Quest{
-			ID:       questID,
-			Title:    title,
-			PlayerID: playerID,
-			XP:       xp,
-			Gold:     gold,
-			Complete: false,
-		}
-
-		// Add new quest to quests slice and save
-		data.Quests = append(data.Quests, newQuest)
-		data.SaveQuests()
-
-		log.Printf("%v created for %v", newQuest.ID, newQuest.PlayerID)
-		http.Redirect(w, r, "/quests", http.StatusSeeOther)
-	}
 }
 
 // Edit quest
@@ -95,7 +99,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Handle get requests
-	if r.Method == http.MethodGet {
+	if r.Method == "GET" {
 		data := struct {
 			Quest *data.Quest
 		}{
@@ -106,7 +110,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 		renderTemplate(w, templates.EditQuest, data)
 
 		// Handle post requests
-	} else if r.Method == http.MethodPost {
+	} else if r.Method == "POST" {
 		// Update the quest details
 		r.ParseForm()
 
@@ -141,7 +145,7 @@ func editQuest(w http.ResponseWriter, r *http.Request) {
 
 // Complete quest
 func completeQuest(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	if r.Method == "POST" {
 		r.ParseForm()
 
 		// Get quest ID
