@@ -37,7 +37,7 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 }
 
 // Render template helper
-func renderTemplate(w http.ResponseWriter, tmplPath string, data interface{}) {
+func renderTemplate(w http.ResponseWriter, tmplPath string, data any) {
 	tmpl, err := template.ParseFiles(templates.Base, tmplPath)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
