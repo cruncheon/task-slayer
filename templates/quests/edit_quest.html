@@ -1,15 +1,15 @@
 {{define "content"}}
-<h1 class="mb-4 text-3xl font-bold">Edit Quest - {{ .Quest.Title }} </h1>
+<h1>Edit Quest - {{ .Quest.Title }} </h1>
 <form action="/quest/edit/{{ .Quest.ID }}" method="POST">
     <label for="title">Player Title:</label><br>
-    <input class="px-2 border-1 rounded-md" type="text" id="title" name="title" value="{{ .Quest.Title }}" required><br><br>
+    <input type="text" id="title" name="title" value="{{ .Quest.Title }}" required><br><br>
 
     <label for="xp">XP:</label><br>
-    <input class="px-2 border-1 rounded-md" type="number" id="xp" name="xp" value="{{ .Quest.XP }}" required><br><br>
+    <input type="number" id="xp" name="xp" value="{{ .Quest.XP }}" required><br><br>
 
     <label for="gold">Gold:</label><br>
-    <input class="px-2 border-1 rounded-md" type="number" id="gold" name="gold" value="{{ .Quest.Gold }}" required><br><br>
+    <input type="number" id="gold" name="gold" value="{{ .Quest.Gold }}" required><br><br>
 
-    <input class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" type="submit" value="Update Quest">
+    <input type="submit" value="Update Quest">
 </form>
 {{ end }}

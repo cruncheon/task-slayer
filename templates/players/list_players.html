@@ -1,14 +1,14 @@
 {{define "content"}}
-<h1 class="mb-4 text-3xl font-bold">Player List</h2>
-<div class="mx-auto flex gap-x-6">
+<h1>Player List</h2>
+<div>
     {{range .Players}}
-        <div class="p-2 bg-gray-100 border-1 mb-4 rounded-lg shadow-md">
-            <p class="font-bold text-xl">{{ .Name }}</p>
-            <p class="">XP: {{ .XP }}</p> 
-            <p class="mb-4">Gold: {{ .Gold }}</p>
+        <div>
+            <p>{{ .Name }}</p>
+            <p>XP: {{ .XP }}</p> 
+            <p>Gold: {{ .Gold }}</p>
             <!-- Item list -->
-            <div class="mb-4">
-                <p class="font-semibold">Items:</p>
+            <div>
+                <p>Items:</p>
                 <ul>
                     {{ range .Items }}
                         <li>- {{ . }}</li>
@@ -17,8 +17,8 @@
                     {{end}}
                 </ul>
             </div>
-            <a class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" href="/player/edit/{{ .ID }}">Edit</a>
-            <a class="px-2 py-1 bg-red-200 rounded-md shadow-sm" href="/player/delete/{{ .ID }}">Delete</a>
+            <a href="/player/edit/{{ .ID }}">Edit</a>
+            <a href="/player/delete/{{ .ID }}">Delete</a>
         </div>
     {{else}}
         <p>No players yet.</p>

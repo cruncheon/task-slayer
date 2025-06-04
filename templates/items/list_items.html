@@ -1,20 +1,20 @@
 {{define "content"}}
-<h1 class="mb-4 text-3xl font-bold">Item List</h2>
-<div class="mx-auto flex gap-x-6">
+<h1>Item List</h2>
+<div>
     {{range .Items}}
-        <div class="p-2 bg-gray-100 border-1 mb-4 rounded-lg shadow-md">
+        <div>
             <form action="/item/buy/{{ .ID }}" method="post">
                 <!-- Item Details -->
-                <p class="text-lg font-semibold">{{ .Name }}</p>
-                <p class="mb-4">Price: {{ .Price }}</p>
+                <p>{{ .Name }}</p>
+                <p>Price: {{ .Price }}</p>
                 <!-- Player Dropdown -->
-                <select name="player_id" class="px-2 py-1 bg-gray-200 rounded-md shadow-sm mr-2">
+                <select name="player_id">
                     {{range $index, $player := $.Players}}
                         <option value="{{ $player.ID }}">{{ $player.Name }}</option>
                     {{end}}
                 </select>
                 <!-- Buy Button -->
-                <button type="submit" class="px-2 py-1 bg-blue-200 rounded-md shadow-sm">Buy</button>
+                <button type="submit">Buy</button>
             </form>
         </div>
     {{else}}

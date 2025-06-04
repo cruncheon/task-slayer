@@ -1,15 +1,15 @@
 {{define "content"}}
-<h1 class="mb-4 text-3xl font-bold">Edit Player - {{ .Player.Name }} </h1>
+<h1>Edit Player - {{ .Player.Name }} </h1>
 <form action="/player/edit/{{ .Player.ID }}" method="POST">
     <label for="name">Player Name:</label><br>
-    <input class="px-2 border-1 rounded-md" type="text" id="name" name="name" value="{{ .Player.Name }}" required><br><br>
+    <input type="text" id="name" name="name" value="{{ .Player.Name }}" required><br><br>
 
     <label for="xp">XP:</label><br>
-    <input class="px-2 border-1 rounded-md" type="number" id="xp" name="xp" value="{{ .Player.XP }}" required><br><br>
+    <input type="number" id="xp" name="xp" value="{{ .Player.XP }}" required><br><br>
 
     <label for="gold">Gold:</label><br>
-    <input class="px-2 border-1 rounded-md" type="number" id="gold" name="gold" value="{{ .Player.Gold }}" required><br><br>
+    <input type="number" id="gold" name="gold" value="{{ .Player.Gold }}" required><br><br>
 
-    <input class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" type="submit" value="Update Player">
+    <input type="submit" value="Update Player">
 </form>
 {{ end }}

@@ -7,3 +7,16 @@ form {
 .completed { 
     text-decoration: line-through; 
 }
+
+/* NAVBAR */
+.navbar {
+    padding: 6px;
+    background: #000000;
+    color: white;
+}
+.navbar a {
+    color: white;
+}
+.navbar a:hover {
+    color: pink;
+}

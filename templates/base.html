@@ -4,24 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Slayer</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
-<body class="bg-[#1A1A1A]">
-    <nav class="shadow bg-[#4B0082]">
-        <div class="container flex items-center justify-center p-6 mx-auto text-[#00FF41]">
-            <a class="border-b-2 border-transparent hover:text-[#00FF41] hover:border-blue-500 mx-4" href="/">Home</a>
-            <a class="border-b-2 border-transparent hover:text-[#00FF41] hover:border-blue-500 mx-4" href="/quests">Quests</a>
-            <a class="border-b-2 border-transparent hover:text-[#00FF41] hover:border-blue-500 mx-4" href="/quest/create">Create Quest</a>
-            <a class="border-b-2 border-transparent hover:text-[#00FF41] hover:border-blue-500 mx-4" href="/players">Players</a>
-            <a class="border-b-2 border-transparent hover:text-[#00FF41] hover:border-blue-500 mx-4" href="/player/create">Create Player</a>
-            <a class="border-b-2 border-transparent hover:text-[#00FF41] hover:border-blue-500 mx-4" href="/items">Items</a>
-            <a class="border-b-2 border-transparent hover:text-[#00FF41] hover:border-blue-500 mx-4" href="/item/create">Create Item</a>
+<body>
+    <nav class="navbar">
+        <div>
+            <a href="/">Home</a>
+            <a href="/quests">Quests</a>
+            <a href="/quest/create">Create Quest</a>
+            <a href="/players">Players</a>
+            <a href="/player/create">Create Player</a>
+            <a href="/items">Items</a>
+            <a href="/item/create">Create Item</a>
         </div>
     </nav>
 
-    <div class="container p-6 mx-auto text-gray-900 bg-[#C0C0C0]">
+    <div>
     {{ template "content" . }}
     </div>
 

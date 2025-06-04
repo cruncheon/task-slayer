@@ -1,12 +1,12 @@
 {{define "content"}}
-<h1 class="mb-4 text-3xl font-bold">Create a New Item</h1>
+<h1>Create a New Item</h1>
 <form action="/item/create" method="POST">
     <label for="name">Item Name:</label><br>
-    <input class="px-2 border-1 rounded-md" type="text" id="name" name="name" required><br><br>
+    <input type="text" id="name" name="name" required><br><br>
 
     <label for="price">Item Price:</label><br>
-    <input class="px-2 border-1 rounded-md" type="number" id="price" name="price" required><br><br>
+    <input type="number" id="price" name="price" required><br><br>
 
-    <input class="px-2 py-1 bg-blue-200 rounded-md shadow-sm" type="submit" value="Create Item">
+    <input type="submit" value="Create Item">
 </form>
 {{ end }}
