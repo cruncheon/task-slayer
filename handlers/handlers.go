@@ -11,19 +11,27 @@ import (
 )
 
 func LoadRoutes() {
+	// Index
 	http.HandleFunc("/", indexPage)
 
+	// Static directory
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static", fs))
+
+	// Quests
 	http.HandleFunc("/quests", listQuests)
 	http.HandleFunc("/quest/create", createQuest)
 	http.HandleFunc("/quest/edit/", editQuest)
 	http.HandleFunc("/quest/complete", completeQuest)
 	http.HandleFunc("/quest/delete/", deleteQuest)
 
+	// Players
 	http.HandleFunc("/players", listPlayers)
 	http.HandleFunc("/player/create", createPlayer)
 	http.HandleFunc("/player/edit/", editPlayer)
 	http.HandleFunc("/player/delete/", deletePlayer)
 
+	// Items
 	http.HandleFunc("/items", listItems)
 	http.HandleFunc("/item/create", createItem)
 	http.HandleFunc("/item/edit/", editItem)
