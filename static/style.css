@@ -8,20 +8,21 @@ form {
 
 /* NAVBAR */
 .navbar {
-    padding: 16px;
+    padding: 0px;
     text-align: center;
     font-family: "Eagle Lake", serif;
     font-weight: 400;
     font-style: normal;
+    text-shadow: 1px 1px 2px black;
 }
 .navbar a {
-    color: #f5c86a;
+    color: #c5a663;
     font-size: 1.5em;
     margin-right: 1.5em;
     text-decoration: none;
 }
 .navbar a:hover {
-    color: #ba964a;
+    text-decoration: underline 2px;
 }
 
 /* PAGE */
@@ -37,6 +38,7 @@ form {
     font-weight: 400;
     font-size: 3em;
     margin: 0;
+    text-shadow: 1px 1px 2px black;
 }
 
 .page-title {
@@ -46,7 +48,8 @@ form {
     font-weight: 400;
     font-style: normal;
     font-size: 2.5em;
-    margin: 0 0 0.5em 0;
+    margin: 1em 0 0.5em 0;
+    text-shadow: 1px 1px 2px black;
 }
 
 .card {
@@ -58,6 +61,7 @@ form {
     border-radius: 2px;
     background: #ffe1a0;
     max-width: 400px;
+    box-shadow: 1px 1px 5px black;
 }
 
 button {
