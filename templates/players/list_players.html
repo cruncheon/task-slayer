@@ -1,8 +1,7 @@
 {{define "content"}}
-<h1>Player List</h2>
-<div>
+<h1 class="page-title">Adventurers</h2>
     {{range .Players}}
-        <div>
+        <div class="card">
             <p>{{ .Name }}</p>
             <p>XP: {{ .XP }}</p> 
             <p>Gold: {{ .Gold }}</p>
@@ -17,11 +16,10 @@
                     {{end}}
                 </ul>
             </div>
-            <a href="/player/edit/{{ .ID }}">Edit</a>
-            <a href="/player/delete/{{ .ID }}">Delete</a>
+            <a href="/player/edit/{{ .ID }}"><button>Edit</button></a>
+            <a href="/player/delete/{{ .ID }}"><button>Delete</button></a>
         </div>
     {{else}}
         <p>No players yet.</p>
     {{end}}
-</ul>
 {{end}}

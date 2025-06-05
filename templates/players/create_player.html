@@ -1,9 +1,11 @@
 {{define "content"}}
-<h1>Create a New Player</h1>
-<form action="/player/create" method="POST">
-    <label for="name">Player Name:</label><br>
-    <input type="text" id="name" name="name" required><br><br>
+<h1 class="page-title">Create a New Player</h1>
+<div class="card">
+    <form action="/player/create" method="POST">
+        <label for="name">Player Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
 
-    <input type="submit" value="Create Player">
-</form>
+        <input type="submit" value="Create Player">
+    </form>
+</div>
 {{ end }}

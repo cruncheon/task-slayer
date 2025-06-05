@@ -1,8 +1,7 @@
 {{define "content"}}
-<h1>Item List</h2>
-<div>
+<h1 class="page-title">Shop</h2>
     {{range .Items}}
-        <div>
+        <div class="card">
             <form action="/item/buy/{{ .ID }}" method="post">
                 <!-- Item Details -->
                 <p>{{ .Name }}</p>
@@ -20,5 +19,4 @@
     {{else}}
         <p>No items yet.</p>
     {{end}}
-</div>
 {{end}}

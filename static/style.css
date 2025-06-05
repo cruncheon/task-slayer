@@ -1,22 +1,73 @@
 body { 
     font-family: Arial, sans-serif; 
+    background-color: #466253;
 }
 form { 
     margin-bottom: 20px; 
 }
-.completed { 
-    text-decoration: line-through; 
-}
 
 /* NAVBAR */
 .navbar {
-    padding: 6px;
-    background: #000000;
-    color: white;
+    padding: 16px;
+    text-align: center;
+    font-family: "Eagle Lake", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 .navbar a {
-    color: white;
+    color: #f5c86a;
+    font-size: 1.5em;
+    margin-right: 1.5em;
+    text-decoration: none;
 }
 .navbar a:hover {
-    color: pink;
+    color: #ba964a;
+}
+
+/* PAGE */
+.content-container {
+    margin: auto;
+    padding: 6px;
+}
+
+.title {
+    text-align: center;
+    color: #633329;
+    font-family: "Eagle Lake", serif;
+    font-weight: 400;
+    font-size: 3em;
+    margin: 0;
+}
+
+.page-title {
+    text-align: center;
+    color: #f5c86a;
+    font-family: "Eagle Lake", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2.5em;
+    margin: 0 0 0.5em 0;
+}
+
+.card {
+    padding: 16px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 4px solid #c19c4b;;
+    border-radius: 2px;
+    background: #ffe1a0;
+    max-width: 400px;
+}
+
+button {
+    padding: 4px;
+}
+
+/* QUESTS */
+.quest-incomplete { 
+    text-decoration: none; 
+}
+.quest-complete { 
+    text-decoration: line-through; 
 }

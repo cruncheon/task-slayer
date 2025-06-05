@@ -5,22 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Slayer</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <nav class="navbar">
-        <div>
+        <h1 class="title">Task Slayer</h1>
+        <div class="navbar">
             <a href="/">Home</a>
             <a href="/quests">Quests</a>
-            <a href="/quest/create">Create Quest</a>
-            <a href="/players">Players</a>
-            <a href="/player/create">Create Player</a>
-            <a href="/items">Items</a>
-            <a href="/item/create">Create Item</a>
+            <!-- <a href="/quest/create">Create Quest</a> -->
+            <a href="/players">Adventurers</a>
+            <!-- <a href="/player/create">Create Player</a> -->
+            <a href="/items">Shop</a>
+            <!-- <a href="/item/create">Create Item</a> -->
         </div>
-    </nav>
 
-    <div>
+    <div class="content-container">
     {{ template "content" . }}
     </div>
 

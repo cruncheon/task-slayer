@@ -1,8 +1,7 @@
 {{define "content"}}
-<h1>Quest List</h1>
-<div >
+<h1 class="page-title">Quests</h1>
     {{range .Quests}}
-        <div class="{{if .Complete}}quest-complete{{else}}quest-incomplete{{end}}">
+        <div class="card {{if .Complete}}quest-complete{{else}}quest-incomplete{{end}}">
             <p>{{.Title}}</p>
             <p>XP: {{ .XP }}</p>
             <p>Gold: {{ .Gold }}</p>
@@ -10,8 +9,8 @@
             {{if .Complete}}
                 
             {{else}}
-                <a href="/quest/edit/{{ .ID }}">Edit</a>
-                <a href="/quest/delete/{{ .ID }}">Delete</a>
+                <a href="/quest/edit/{{ .ID }}"><button>Edit</button></a>
+                <a href="/quest/delete/{{ .ID }}"><button>Delete</button></a>
             {{end}}
             <form action="/quest/complete" method="POST" style="display:inline;">
                 <input type="hidden" name="quest_id" value="{{.ID}}">
@@ -25,5 +24,4 @@
     {{else}}
         <p>No quests yet.</p>
     {{end}}
-</div>
 {{end}}

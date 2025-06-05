@@ -1,12 +1,14 @@
 {{define "content"}}
-<h1>Create a New Item</h1>
-<form action="/item/create" method="POST">
-    <label for="name">Item Name:</label><br>
-    <input type="text" id="name" name="name" required><br><br>
+<h1 class="page-title">Create a New Item</h1>
+<div class="card">
+    <form action="/item/create" method="POST">
+        <label for="name">Item Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
 
-    <label for="price">Item Price:</label><br>
-    <input type="number" id="price" name="price" required><br><br>
+        <label for="price">Item Price:</label><br>
+        <input type="number" id="price" name="price" required><br><br>
 
-    <input type="submit" value="Create Item">
-</form>
+        <input type="submit" value="Create Item">
+    </form>
+</div>
 {{ end }}
