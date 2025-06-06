@@ -7,6 +7,29 @@ form {
     margin-bottom: 20px; 
 }
 
+button {
+    border: 1px solid black;
+    border-radius: 3px;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.btn-edit {
+    background-color: #4444cc;
+}
+
+.btn-del {
+    background-color: #f93232;
+}
+
+.btn-comp {
+    background-color: #2e702e;
+}
+
 /* HEADER */
 .header {
     background-color: #304439;
@@ -68,10 +91,6 @@ form {
     background: #ffe1a0;
     max-width: 400px;
     box-shadow: inset 0px 0px 5px black;
-}
-
-button {
-    padding: 4px;
 }
 
 /* QUESTS */

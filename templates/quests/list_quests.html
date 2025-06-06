@@ -9,15 +9,15 @@
             {{if .Complete}}
                 
             {{else}}
-                <a href="/quest/edit/{{ .ID }}"><button>Edit</button></a>
-                <a href="/quest/delete/{{ .ID }}"><button>Delete</button></a>
+                <a href="/quest/edit/{{ .ID }}"><button class="btn-edit">Edit</button></a>
+                <a href="/quest/delete/{{ .ID }}"><button class="btn-del">Delete</button></a>
             {{end}}
             <form action="/quest/complete" method="POST" style="display:inline;">
                 <input type="hidden" name="quest_id" value="{{.ID}}">
                 {{if .Complete}}
                     <button type="submit" disabled>Completed</button>
                 {{else}}
-                    <button type="submit">Mark Complete</button>
+                    <button type="submit" class="btn-comp">Mark Complete</button>
                 {{end}}
             </form>
         </div>
