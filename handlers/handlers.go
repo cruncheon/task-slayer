@@ -41,7 +41,7 @@ func LoadRoutes() {
 
 // Index page
 func indexPage(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, templates.Index, nil)
+	http.Redirect(w, r, "/quests", http.StatusSeeOther)
 }
 
 // Render template helper
