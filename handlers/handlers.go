@@ -14,6 +14,9 @@ func LoadRoutes() {
 	// Index
 	http.HandleFunc("/", indexPage)
 
+	// Admin
+	http.HandleFunc("/admin", adminPage)
+
 	// Static directory
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
@@ -69,4 +72,8 @@ func parseFormInt(r *http.Request, key string) (int64, error) {
 		return 0, fmt.Errorf("invalid %s value: %w", key, err)
 	}
 	return intValue, nil
+}
+
+func adminPage(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, templates.AdminPage, nil)
 }

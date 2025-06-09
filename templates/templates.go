@@ -5,6 +5,8 @@ var (
 
 	Index string = "templates/index.html"
 
+	AdminPage = "templates/admin.html"
+
 	ListItems  string = "templates/items/list_items.html"
 	CreateItem string = "templates/items/create_item.html"
 	EditItem   string = "templates/items/edit_item.html"
