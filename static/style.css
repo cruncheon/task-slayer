@@ -55,6 +55,21 @@ button {
     text-decoration: none;
 }
 
+.admin-panel ul {
+  list-style-type: none;
+  padding-left: 12px;
+}
+
+.admin-panel li {
+  margin-bottom: 0.75em;
+}
+
+.admin-panel a {
+    color: #466253;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+
 /* PAGE */
 .content-container {
     margin: auto;
