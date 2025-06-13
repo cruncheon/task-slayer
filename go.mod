@@ -1,3 +1,3 @@
 module github.com/cruncheon/task-slayer
 
-go 1.24.2
+go 1.24
