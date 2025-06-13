@@ -17,7 +17,7 @@ func main() {
 
 	// HTTP Server
 	srv := &http.Server{Addr: ":8080"}
-	log.Println("Server started at http://localhost:8080")
+	log.Println("Server started on port 8080")
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatal(err)
 	}
